@@ -149,7 +149,6 @@ fabric.properties
 .mtj.tmp/
 
 # Package Files #
-*.jar
 *.war
 *.nar
 *.ear
@@ -237,7 +236,6 @@ $RECYCLE.BIN/
 
 ### Gradle ###
 .gradle
-gradle
 **/build/
 !src/**/build/
 
