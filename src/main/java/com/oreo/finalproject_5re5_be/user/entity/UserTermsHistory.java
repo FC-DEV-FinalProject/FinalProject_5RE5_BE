@@ -31,6 +31,7 @@ public class UserTermsHistory extends BaseEntity {
     @JoinColumn(name = "user_seq")
     private User user;
 
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "terms_seq")
     private UserTerms terms;
