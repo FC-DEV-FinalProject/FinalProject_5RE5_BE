@@ -22,18 +22,18 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 public class BaseEntity {
 
     @CreatedDate
-    @Column(updatable = false, name = "createTime")
-    private LocalDateTime createTime;
+    @Column(updatable = false, name = "reg_date")
+    private LocalDateTime regDate;
 
     @LastModifiedDate
-    @Column(insertable = false, name = "updateTime")
-    private LocalDateTime updateTime;
+    @Column(insertable = false, name = "up_date")
+    private LocalDateTime upDate;
 
     @CreatedBy
-    @Column(updatable = false, name ="createUser")
-    private String createBy;
+    @Column(updatable = false, name ="reg_seq")
+    private Long regSeq;
 
     @LastModifiedBy
-    @Column(insertable = false, name = "updateUser")
-    private String updateBy;
+    @Column(insertable = false, name = "up_seq")
+    private Long upSeq;
 }
