@@ -72,8 +72,11 @@ dependencies {
     testImplementation 'ch.qos.logback:logback-classic:1.5.6'
 
 
+
+    // tts
+    implementation 'com.google.cloud:google-cloud-texttospeech:2.49.0'
 }
 
-test {
+tasks.named('test') {
     useJUnitPlatform()
 }
