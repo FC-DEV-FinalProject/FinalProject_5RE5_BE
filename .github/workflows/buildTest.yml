@@ -58,11 +58,11 @@ jobs:
         run: chmod +x ./gradlew
         shell: bash
       - name: Create JSON Config File
-        env:
-          TTS_JSON_CONTENT: ${{ secrets.TTS_JSON }}
         run: |
           echo "${TTS_JSON_CONTENT}" > src/main/resources/tts.json
           echo $TTS_JSON_CONTENT
+        env:
+          TTS_JSON_CONTENT: ${{ secrets.TTS_JSON }}
 
       # 빌드 및 테스트 실행
       - name: Build and Test
