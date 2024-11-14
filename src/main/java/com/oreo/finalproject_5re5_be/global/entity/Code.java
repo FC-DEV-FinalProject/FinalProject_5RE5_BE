@@ -59,9 +59,5 @@ public class Code extends BaseEntity{
     @Column(name = "up_id", length = 20)
     private String upId;
 
-    // Getters and Setters
-    public Long getCodeId() {
-        return codeId;
-    }
 
 }
