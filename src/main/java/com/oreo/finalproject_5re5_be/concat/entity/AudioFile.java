@@ -3,7 +3,10 @@ package com.oreo.finalproject_5re5_be.concat.entity;
 
 import com.oreo.finalproject_5re5_be.global.entity.BaseEntity;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.time.LocalDateTime;
 
@@ -20,7 +23,7 @@ public class AudioFile extends BaseEntity {
     private Long audioFileSeq;
 
     @OneToOne()
-    @JoinColumn(name = "concat_row_Seq")
+    @JoinColumn(name = "concat_row_seq")
     private ConcatRow concatRowSeq;
 
     private String audioUrl;
