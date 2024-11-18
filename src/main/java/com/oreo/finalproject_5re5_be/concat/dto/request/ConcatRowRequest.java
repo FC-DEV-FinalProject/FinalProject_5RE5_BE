@@ -12,7 +12,7 @@ import lombok.*;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class ConcatRowRequest {
+public class ConcatRowRequest { //화면을 저장하기 위해 SelectedConcatRowRequest와 달리 selected여부도 저장해야함
     @NotNull(message = "seq 필드는 null 일 수 없습니다.")
     private Long seq;
 

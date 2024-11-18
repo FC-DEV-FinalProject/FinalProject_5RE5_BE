@@ -1,7 +1,5 @@
 package com.oreo.finalproject_5re5_be.concat.dto.request;
 
-//순수한 오디오 파일
-
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
@@ -15,7 +13,7 @@ import java.time.LocalDateTime;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class OriginAudioRequest {
+public class OriginAudioRequest { //순수한 오디오 파일
     @NotNull(message = "seq 필드는 null 일 수 없습니다.")
     private Long seq;
 
