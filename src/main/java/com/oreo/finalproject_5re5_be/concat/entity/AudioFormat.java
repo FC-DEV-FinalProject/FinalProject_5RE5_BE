@@ -19,13 +19,13 @@ public class AudioFormat extends BaseEntity {
     @Column(name = "audio_format_seq")
     private Long audioFormatSeq;
 
-    @OneToOne()
-    @JoinColumn(name = "concat_result_seq")
+
+    @OneToOne(mappedBy = "audio_format")
+    private AudioFile audioFile;
+
+    @OneToOne(mappedBy = "audio_format")
     private ConcatResult concatResult;
 
-    @OneToOne()
-    @JoinColumn(name = "audio_file_seq")
-    private AudioFile audioFile;
 
     private String encoding;
     private Integer sampleRate;
