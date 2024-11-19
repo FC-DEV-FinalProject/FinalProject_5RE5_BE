@@ -1,17 +1,13 @@
 package com.oreo.finalproject_5re5_be.concat.entity;
 
 import com.oreo.finalproject_5re5_be.global.entity.BaseEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import lombok.*;
 
 @ToString
 @Getter
+@Setter
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity(name = "concat_row")
@@ -25,6 +21,9 @@ public class ConcatRow extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "pro_seq")
     private ConcatTab concatTab;
+
+    @OneToOne(mappedBy = "concatRow")
+    private AudioFile audioFile;
 
     private String rowText;
     private Character selected;
