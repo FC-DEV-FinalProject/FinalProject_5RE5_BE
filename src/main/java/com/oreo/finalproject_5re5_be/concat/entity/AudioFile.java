@@ -22,7 +22,12 @@ public class AudioFile extends BaseEntity {
 
     @OneToOne()
     @JoinColumn(name = "concat_row_seq")
-    private ConcatRow concatRowSeq;
+    private ConcatRow concatRow;
+
+    @OneToOne()
+    @JoinColumn(name = "audio_format_seq")
+    private AudioFormat audioFormat;
+
 
     private String audioUrl;
     private String extension;
