@@ -28,6 +28,7 @@ public class ConcatTab extends BaseEntity {
     private ConcatOption option;
 
     @OneToMany(mappedBy = "concatTab", cascade = CascadeType.ALL)
+    @Builder.Default
     private List<ConcatRow> concatRows = new ArrayList<>();
 
     @Column(name = "status")

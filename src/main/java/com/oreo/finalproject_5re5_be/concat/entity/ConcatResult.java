@@ -39,6 +39,7 @@ public class ConcatResult extends BaseEntity {
     private String fileName;
 
     @OneToMany(mappedBy = "concatResult", cascade = CascadeType.ALL)
+    @Builder.Default
     private List<MaterialAudio> materialAudioList = new ArrayList<>();
 
     @OneToOne(cascade = CascadeType.ALL)
