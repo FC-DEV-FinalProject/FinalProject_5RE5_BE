@@ -8,6 +8,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @ToString
 @Getter
 @AllArgsConstructor
@@ -25,6 +28,9 @@ public class ConcatTab extends BaseEntity {
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "option_seq")
     private ConcatOption option;
+
+    @OneToMany(mappedBy = "concatTab", cascade = CascadeType.ALL)
+    private List<ConcatRow> concatRows = new ArrayList<>();
 
     @Column(name = "status")
     private Character status;
