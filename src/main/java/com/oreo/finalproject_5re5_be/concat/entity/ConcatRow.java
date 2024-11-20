@@ -22,7 +22,7 @@ public class ConcatRow extends BaseEntity {
     @JoinColumn(name = "pro_seq")
     private ConcatTab concatTab;
 
-    @OneToOne(mappedBy = "concatRow")
+    @OneToOne(mappedBy = "concatRow", cascade = CascadeType.ALL)
     private AudioFile audioFile;
 
     private String rowText;
