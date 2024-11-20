@@ -20,10 +20,10 @@ public class AudioFormat extends BaseEntity {
     private Long audioFormatSeq;
 
 
-    @OneToOne(mappedBy = "audio_format")
+    @OneToOne(mappedBy = "audioFormat")
     private AudioFile audioFile;
 
-    @OneToOne(mappedBy = "audio_format")
+    @OneToOne(mappedBy = "audioFormat")
     private ConcatResult concatResult;
 
 
