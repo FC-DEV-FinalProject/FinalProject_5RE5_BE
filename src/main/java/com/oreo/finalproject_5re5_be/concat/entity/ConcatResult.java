@@ -4,6 +4,7 @@ import com.oreo.finalproject_5re5_be.global.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @ToString
@@ -38,9 +39,9 @@ public class ConcatResult extends BaseEntity {
     private String fileName;
 
     @OneToMany(mappedBy = "concatResult", cascade = CascadeType.ALL)
-    private List<MaterialAudio> usedRows; // 사용된 Row들
+    private List<MaterialAudio> materialAudioList = new ArrayList<>();
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "audio_format_seq")
     private AudioFormat audioFormat;
 
