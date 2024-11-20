@@ -24,7 +24,7 @@ public class AudioFile extends BaseEntity {
     @JoinColumn(name = "concat_row_seq")
     private ConcatRow concatRow;
 
-    @OneToOne()
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "audio_format_seq")
     private AudioFormat audioFormat;
 
