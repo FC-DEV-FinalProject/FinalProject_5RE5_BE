@@ -35,7 +35,7 @@ public class Code extends BaseEntity {
     @Column(name = "cate_num", nullable = false, length = 30)
     private String cateNum;
 
-    @Column(name = "code", nullable = false, length = 30)
+    @Column(name = "code", nullable = false, length = 30, unique = true)
     private String code;
 
     @Column(name = "name", length = 30)
