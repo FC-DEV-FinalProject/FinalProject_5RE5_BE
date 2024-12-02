@@ -35,29 +35,72 @@ class MemberChangeHistoryRepositoryTest {
     private Member member;
     private Code code;
 
+    /**
+     * 초기화 작업
+     * - 자동 주입 확인
+     * - 더미 데이터, DB 테이블 초기화
+     * - 더미 데이터 생성 및 저장
+     * - 픽스처 생성 및 확인
+     */
     @BeforeEach
     void setUp() {
-        // 자동 주입 확인
         assertNotNull(memberChangeHistoryRepository);
         assertNotNull(memberRepository);
         assertNotNull(codeRepository);
 
-        // 초기화
         dummy.clear();
         memberRepository.deleteAll();
         codeRepository.deleteAll();
         memberChangeHistoryRepository.deleteAll();
 
-        // 더미 데이터 생성 및 저장
         createCode();
         createMember();
         createDummy();
 
         assertNotNull(code);
         assertNotNull(member);
-
-
     }
+
+    /**
+     * 회원 변경 이력 테스트 목록 : CRUD
+     * - 성공/실패하는 경우에 대해서 테스트 코드 작성
+     *
+     * 1. 회원 변경 이력 생성
+     *    - 성공
+     *      1. 회원 변경 이력 생성에 성공함
+     *    - 실패
+     *      1. 테이블 제약 조건 위배로 회원 변경 이력 생성 실패
+     *      2. 회원 ID가 존재하지 않아 회원 변경 이력 생성 실패
+     *      3. 데이터 입력 형식 오류로 회원 변경 이력 생성 실패
+     *
+     * 2. 회원 변경 이력 조회
+     *    2-1. 특정 회원 ID로 조회
+     *       - 성공
+     *         1. 특정 회원 ID로 조회 성공
+     *       - 실패
+     *         1. 없는 회원 ID로 조회 실패
+     *    2-2. 모든 회원 변경 이력 조회
+     *       - 성공
+     *         1. 모든 회원 변경 이력 조회 성공
+     *       - 실패
+     *         1. 데이터베이스 연결 문제로 조회 실패
+     *
+     * 3. 회원 가장 최근 수정
+     *    - 성공
+     *      1. 회원 가장 최근 수정 내역 업데이트 성공
+     *    - 실패
+     *      1. 테이블 제약 조건 위배로 최근 수정 실패
+     *      2. 회원 ID가 존재하지 않아 최근 수정 실패
+     *      3. 데이터 입력 형식 오류로 최근 수정 실패
+     *
+     * 4. 회원 변경 이력 삭제
+     *    - 성공
+     *      1. 특정 회원 변경 이력 삭제 성공
+     *    - 실패
+     *      1. 없는 회원 변경 이력을 삭제하려고 할 때 삭제 실패
+     *      2. 데이터베이스 연결 문제로 삭제 실패
+     */
+
 
     @Test
     @DisplayName("회원 가장 최근 변경 이력 조회")

@@ -31,6 +31,5 @@ public interface CodeRepository extends JpaRepository<Code, Long> {
     // 코드 번호로 코드가 존재하는지 확인.
     boolean existsByCode(String code);
 
-    //
     boolean existsByCodeSeq(Long codeSeq);
 }
