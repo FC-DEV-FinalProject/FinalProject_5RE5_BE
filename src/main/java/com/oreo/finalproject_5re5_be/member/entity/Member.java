@@ -30,15 +30,15 @@ public class Member extends BaseEntity {
     @Column(name = "member_seq")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long seq;
-    @Column(name = "id", nullable = false)
+    @Column(name = "id", nullable = false, unique = true, length = 30)
     private String id;
-    @Column(name = "email", nullable = false)
+    @Column(name = "email", nullable = false, unique = true, length = 50)
     private String email;
     @Column(name = "pwd", nullable = false)
     private String password;
     @Column(name = "birth_date")
     private String birthDate;
-    @Column(name = "name", nullable = false)
+    @Column(name = "name", nullable = false, length = 30)
     private String name;
     @Column(name = "phon")
     private String phon;

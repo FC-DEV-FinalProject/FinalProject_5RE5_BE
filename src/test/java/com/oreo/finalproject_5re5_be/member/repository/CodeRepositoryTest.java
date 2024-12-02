@@ -28,8 +28,6 @@ class CodeRepositoryTest {
      * 초기화 작업
      * - 자동 주입 확인
      * - 코드 리포지토리 DB 테이블 초기화
-     * - 더미 데이터 생성 및 저장
-     * - 더미 데이터 정렬
      */
 
     @BeforeEach
