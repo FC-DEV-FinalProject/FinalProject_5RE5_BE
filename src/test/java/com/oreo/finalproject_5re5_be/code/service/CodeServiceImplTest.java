@@ -1,4 +1,4 @@
-package com.oreo.finalproject_5re5_be.member.service;
+package com.oreo.finalproject_5re5_be.code.service;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -11,7 +11,6 @@ import com.oreo.finalproject_5re5_be.code.dto.response.CodeResponses;
 import com.oreo.finalproject_5re5_be.code.entity.Code;
 import com.oreo.finalproject_5re5_be.code.exeption.CodeDuplicatedException;
 import com.oreo.finalproject_5re5_be.code.repository.CodeRepository;
-import com.oreo.finalproject_5re5_be.code.service.CodeServiceImpl;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
