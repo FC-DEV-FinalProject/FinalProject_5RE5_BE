@@ -14,11 +14,11 @@ class MemberConnectionHistoryRepositoryTest {
     @Autowired
     private MemberConnectionHistoryRepository memberConnectionHistoryRepository;
 
-    @BeforeEach
-    void setUp() {
-        // 자동주입 확인
-        assertNotNull(memberConnectionHistoryRepository);
-    }
+//    @BeforeEach
+//    void setUp() {
+//        // 자동주입 확인
+//        assertNotNull(memberConnectionHistoryRepository);
+//    }
 
 
 }

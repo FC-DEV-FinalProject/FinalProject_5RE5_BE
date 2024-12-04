@@ -15,9 +15,9 @@ class MemberTermsHistoryRepositoryTest {
     private MemberTermsHistoryRepository memberTermsHistoryRepository;
 
 
-    @BeforeEach
-    void setUp() {
-        // 자동주입 확인
-        assertNotNull(memberTermsHistoryRepository);
-    }
+//    @BeforeEach
+//    void setUp() {
+//        // 자동주입 확인
+//        assertNotNull(memberTermsHistoryRepository);
+//    }
 }

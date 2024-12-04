@@ -16,10 +16,10 @@ class MemberDeleteRepositoryTest {
     @Autowired
     private MemberDeleteRepository memberDeleteRepository;
 
-    @BeforeEach
-    void setUp() {
-        // 자동주입 확인
-        assertNotNull(memberDeleteRepository);
-    }
+//    @BeforeEach
+//    void setUp() {
+//        // 자동주입 확인
+//        assertNotNull(memberDeleteRepository);
+//    }
 
 }

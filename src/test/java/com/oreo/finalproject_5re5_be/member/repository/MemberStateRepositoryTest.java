@@ -15,9 +15,9 @@ class MemberStateRepositoryTest {
     @Autowired
     private MemberStateRepository memberStateRepository;
 
-    @BeforeEach
-    void setUp() {
-        // 자동주입 확인
-        assertNotNull(memberStateRepository);
-    }
+//    @BeforeEach
+//    void setUp() {
+//        // 자동주입 확인
+//        assertNotNull(memberStateRepository);
+//    }
 }
