@@ -3,6 +3,7 @@ package com.oreo.finalproject_5re5_be.member.config;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.oreo.finalproject_5re5_be.member.dto.CustomUserDetails;
 import com.oreo.finalproject_5re5_be.member.entity.Member;
+import com.oreo.finalproject_5re5_be.member.repository.MemberConnectionHistoryRepository;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -11,6 +12,8 @@ import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
@@ -19,6 +22,7 @@ import org.springframework.stereotype.Component;
 // 로그인 성공시 처리되는 핸들러
 @Component
 public class LoginAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
+
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
@@ -61,8 +65,6 @@ public class LoginAuthenticationSuccessHandler implements AuthenticationSuccessH
         // 세션에 아이디 등록
         session.setAttribute("memberId", memberId);
         session.setAttribute("memberSeq", memberSeq);
-
-
 
         // 세션 처리
         handleCookie(request, response, authentication);
