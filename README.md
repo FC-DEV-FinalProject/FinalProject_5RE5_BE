@@ -106,6 +106,8 @@ Java         : 33,731 <br>
 [conflict]    :     합병 시 발생한 충돌 수정
 </code></pre>
 
+## 아키텍쳐
+![5re5 drawio](https://github.com/user-attachments/assets/dfe47cab-88b2-4d69-a7ad-2b5d334122e8)
 
 ## 🏭 디렉토리 구조
 <pre><code>
