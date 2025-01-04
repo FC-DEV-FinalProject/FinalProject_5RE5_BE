@@ -1,4 +1,4 @@
-package com.oreo.finalproject_5re5_be.global;
+package com.oreo.finalproject_5re5_be.global.component;
 
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -20,7 +20,6 @@ public class MethodTime {
             "execution(* com.oreo.finalproject_5re5_be.tts.controller.*.*(..)) || " +
             "execution(* com.oreo.finalproject_5re5_be.vc.controller.*.*(..)) || " +
             "execution(* com.oreo.finalproject_5re5_be.project.controller.*.*(..))")
-
     public Object executionAspect(ProceedingJoinPoint joinPoint) throws Throwable{
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
