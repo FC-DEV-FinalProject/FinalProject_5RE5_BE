@@ -1,5 +1,6 @@
 package com.oreo.finalproject_5re5_be.global.exception;
 
+import com.oreo.finalproject_5re5_be.global.component.MethodTime;
 import com.oreo.finalproject_5re5_be.global.dto.response.ResponseDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,6 +10,12 @@ import org.springframework.web.multipart.MultipartException;
 
 @RestControllerAdvice
 public class RestGlobalExceptionHandler {
+
+    @ExceptionHandler(MethodTimeException.class)
+    public ResponseEntity<ResponseDto<String>> handleMethodException(DataNotFoundException ex) {
+        return new ResponseDto<>(HttpStatus.NOT_FOUND.value(), ex.getMessage()).toResponseEntity();
+    }
+
     @ExceptionHandler(DataNotFoundException.class)
     public ResponseEntity<ResponseDto<String>> handleDataNotFoundException(DataNotFoundException ex) {
         return new ResponseDto<>(HttpStatus.NOT_FOUND.value(), ex.getMessage()).toResponseEntity();
