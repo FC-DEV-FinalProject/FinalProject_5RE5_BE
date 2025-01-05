@@ -1,5 +1,6 @@
 package com.oreo.finalproject_5re5_be.global.component;
 
+import com.oreo.finalproject_5re5_be.global.exception.MethodTimeException;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -26,7 +27,11 @@ public class MethodTime {
 
         try {
             return joinPoint.proceed();
-        } finally {
+        }catch (Exception e){
+            log.error("Exception in method [{}]: {}",
+                    joinPoint.getSignature().toShortString(), e.getMessage(), e);
+            throw new MethodTimeException("AOP 처리 중 예외 발생: " + joinPoint.getSignature().toShortString());
+        }finally {
             stopWatch.stop();
             log.info("시간측정 time for method [{}]: {} ms",
                     joinPoint.getSignature().toShortString(),

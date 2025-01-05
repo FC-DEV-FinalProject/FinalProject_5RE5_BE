@@ -50,9 +50,9 @@ public enum ErrorCode {
     TTS_MAKE_INVALID_INPUT_VALUE_ERROR(400, "TTS 생성 입력값이 올바르지 않습니다."),
     TTS_MAKE_INVALID_SPEED(400, "허용되지 않는 TTS 속도입니다."),
     TTS_MAKE_INVALID_PITCH(400, "허용되지 않는 TTS 음높이입니다."),
-    TTS_MAKE_INVALID_VOLUME(400, "허용되지 않는 TTS 음량입니다.");
+    TTS_MAKE_INVALID_VOLUME(400, "허용되지 않는 TTS 음량입니다."),
 
-
+    METHODTIME_ERROR(500, "시간측정을 실패했습니다.");
     private final String message;
     private final int status;
 
