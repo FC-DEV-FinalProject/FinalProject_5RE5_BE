@@ -16,7 +16,6 @@ public class MethodTime {
 
     @Around("execution(* com.oreo.finalproject_5re5_be.code.controller.*.*(..)) || " +
             "execution(* com.oreo.finalproject_5re5_be.concat.controller.*.*(..)) || " +
-            "execution(* com.oreo.finalproject_5re5_be.global.controller.*.*(..)) || " +
             "execution(* com.oreo.finalproject_5re5_be.member.controller.*.*(..)) || " +
             "execution(* com.oreo.finalproject_5re5_be.tts.controller.*.*(..)) || " +
             "execution(* com.oreo.finalproject_5re5_be.vc.controller.*.*(..)) || " +
