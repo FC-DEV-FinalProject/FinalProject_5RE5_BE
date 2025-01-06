@@ -7,7 +7,7 @@ import com.oreo.finalproject_5re5_be.member.repository.MemberRepository;
 import com.oreo.finalproject_5re5_be.project.dto.response.ProjectResponse;
 import com.oreo.finalproject_5re5_be.project.entity.Project;
 import com.oreo.finalproject_5re5_be.project.exception.InvalidProjectNameException;
-import com.oreo.finalproject_5re5_be.project.exception.projectNotMemberException;
+import com.oreo.finalproject_5re5_be.project.exception.ProjectNotMemberException;
 import com.oreo.finalproject_5re5_be.project.repository.ProjectRepository;
 import com.oreo.finalproject_5re5_be.tts.repository.TtsSentenceRepository;
 import com.oreo.finalproject_5re5_be.vc.repository.VcRepository;
@@ -159,7 +159,7 @@ public class ProjectServiceImpl implements ProjectService {
         if (seq.equals(memberSeq)) {
             return true;
         }
-        throw new projectNotMemberException();
+        throw new ProjectNotMemberException();
     }
 
     /**

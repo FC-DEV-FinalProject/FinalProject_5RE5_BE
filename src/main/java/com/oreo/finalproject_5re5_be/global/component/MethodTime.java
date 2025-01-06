@@ -20,7 +20,7 @@ public class MethodTime {
             "execution(* com.oreo.finalproject_5re5_be.tts.controller.*.*(..)) || " +
             "execution(* com.oreo.finalproject_5re5_be.vc.controller.*.*(..)) || " +
             "execution(* com.oreo.finalproject_5re5_be.project.controller.*.*(..))")
-    public Object executionAspect(ProceedingJoinPoint joinPoint) throws Throwable{
+    public Object executionAspect(ProceedingJoinPoint joinPoint) throws Throwable {
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
 
