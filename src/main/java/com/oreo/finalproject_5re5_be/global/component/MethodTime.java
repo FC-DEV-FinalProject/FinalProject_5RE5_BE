@@ -14,25 +14,30 @@ import org.springframework.util.StopWatch;
 public class MethodTime {
     private static final Logger log = LoggerFactory.getLogger(MethodTime.class);
 
-    @Around("execution(* com.oreo.finalproject_5re5_be.code.controller.*.*(..)) || " +
-            "execution(* com.oreo.finalproject_5re5_be.concat.controller.*.*(..)) || " +
-            "execution(* com.oreo.finalproject_5re5_be.member.controller.*.*(..)) || " +
-            "execution(* com.oreo.finalproject_5re5_be.tts.controller.*.*(..)) || " +
-            "execution(* com.oreo.finalproject_5re5_be.vc.controller.*.*(..)) || " +
-            "execution(* com.oreo.finalproject_5re5_be.project.controller.*.*(..))")
-    public Object executionAspect(ProceedingJoinPoint joinPoint) throws Throwable{
+    @Around(
+            "execution(* com.oreo.finalproject_5re5_be.code.controller.*.*(..)) || "
+                    + "execution(* com.oreo.finalproject_5re5_be.concat.controller.*.*(..)) || "
+                    + "execution(* com.oreo.finalproject_5re5_be.member.controller.*.*(..)) || "
+                    + "execution(* com.oreo.finalproject_5re5_be.tts.controller.*.*(..)) || "
+                    + "execution(* com.oreo.finalproject_5re5_be.vc.controller.*.*(..)) || "
+                    + "execution(* com.oreo.finalproject_5re5_be.project.controller.*.*(..))")
+    public Object executionAspect(ProceedingJoinPoint joinPoint) throws Throwable {
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
 
         try {
             return joinPoint.proceed();
-        }catch (Exception e){
-            log.error("Exception in method [{}]: {}",
-                    joinPoint.getSignature().toShortString(), e.getMessage(), e);
+        } catch (Exception e) {
+            log.error(
+                    "Exception in method [{}]: {}",
+                    joinPoint.getSignature().toShortString(),
+                    e.getMessage(),
+                    e);
             throw new MethodTimeException("AOP 처리 중 예외 발생: " + joinPoint.getSignature().toShortString());
-        }finally {
+        } finally {
             stopWatch.stop();
-            log.info("시간측정 time for method [{}]: {} ms",
+            log.info(
+                    "시간측정 time for method [{}]: {} ms",
                     joinPoint.getSignature().toShortString(),
                     stopWatch.getTotalTimeMillis());
         }
