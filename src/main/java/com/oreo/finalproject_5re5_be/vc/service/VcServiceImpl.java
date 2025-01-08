@@ -44,7 +44,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -88,6 +87,7 @@ public class VcServiceImpl implements VcService {
     }
 
     private static final Logger log = LoggerFactory.getLogger(VcServiceImpl.class);
+
     /**
      * Vc SRC 파일 저장
      *
@@ -99,7 +99,7 @@ public class VcServiceImpl implements VcService {
     public VcUrlResponse srcSave(@Valid @NotNull VcSrcRequest vcSrcRequest, Long proSeq) {
         // VC 찾기
         Vc vc = projectFind(proSeq);
-        if(vc == null){
+        if (vc == null) {
             throw new VcNotFoundProjectException("VC not found ProjectSeq : " + proSeq);
         }
         // vcSrcFileRepository를 통해 rowOrder 값 결정
@@ -154,8 +154,8 @@ public class VcServiceImpl implements VcService {
         Long proSeq = vcAudioRequest.getSeq();
         // 프로젝트 조회, 객체 생성후 저장
         Vc vc = projectFind(proSeq);
-        if(vc == null){
-            throw new VcNotFoundProjectException("VC Not Found projectSeq : "+ proSeq);
+        if (vc == null) {
+            throw new VcNotFoundProjectException("VC Not Found projectSeq : " + proSeq);
         }
 
         try {
@@ -187,7 +187,7 @@ public class VcServiceImpl implements VcService {
     public VcUrlResponse resultSave(@Valid @NotNull VcAudioRequest vcAudioRequest) {
         // SRCFile 조회
         VcSrcFile srcFile = vcSrcFileFind(vcAudioRequest.getSeq());
-        if(srcFile == null){
+        if (srcFile == null) {
             throw new VcNotFoundSrcException("Src not found seq : " + vcAudioRequest.getSeq());
         }
 
@@ -232,7 +232,7 @@ public class VcServiceImpl implements VcService {
     public VcTextResponse textSave(@Valid @NotNull VcTextRequest vcTextRequest) {
         // SRC 조회
         VcSrcFile srcFile = vcSrcFileFind(vcTextRequest.getSeq());
-        if(srcFile == null){
+        if (srcFile == null) {
             throw new VcNotFoundSrcException("Src not found seq : " + vcTextRequest.getSeq());
         }
 
@@ -696,9 +696,9 @@ public class VcServiceImpl implements VcService {
      */
     private VcUrlRequest vcTrgUrlRequest(Long trgSeq) {
         VcTrgFile trgFile =
-            vcTrgFileRepository
-                .findById(trgSeq)
-                .orElseThrow(() -> new VcNotFoundTrgException("trgFile not found"));
+                vcTrgFileRepository
+                        .findById(trgSeq)
+                        .orElseThrow(() -> new VcNotFoundTrgException("trgFile not found"));
         log.info("[vcService] vcTrgUrlRequest trgFile 확인 : {} ", trgFile);
         return VcUrlRequest.of(trgFile.getTrgSeq(), trgFile.getFileUrl());
     }

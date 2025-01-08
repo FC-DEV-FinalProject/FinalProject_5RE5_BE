@@ -1,6 +1,5 @@
 package com.oreo.finalproject_5re5_be.vc.exception;
 
-import com.oreo.finalproject_5re5_be.global.exception.EntityNotFoundException;
 import com.oreo.finalproject_5re5_be.global.exception.ErrorCode;
 
 public class VcNotFoundProjectException extends VcNotFoundException {

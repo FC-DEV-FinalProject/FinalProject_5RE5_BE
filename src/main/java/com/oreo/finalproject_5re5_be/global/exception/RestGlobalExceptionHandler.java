@@ -1,6 +1,5 @@
 package com.oreo.finalproject_5re5_be.global.exception;
 
-import com.oreo.finalproject_5re5_be.global.component.MethodTime;
 import com.oreo.finalproject_5re5_be.global.dto.response.ResponseDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
