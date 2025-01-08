@@ -55,7 +55,6 @@ import org.springframework.web.multipart.MultipartFile;
 @Service
 @RequiredArgsConstructor
 @Validated
-@Transactional
 public class VcServiceImpl implements VcService {
     private VcRepository vcRepository;
     private VcSrcFileRepository vcSrcFileRepository;
@@ -150,6 +149,7 @@ public class VcServiceImpl implements VcService {
      * @return VcUrlResponse
      */
     @Override
+    @Transactional
     public VcUrlResponse trgSave(@Valid @NotNull VcAudioRequest vcAudioRequest) {
         Long proSeq = vcAudioRequest.getSeq();
         // 프로젝트 조회, 객체 생성후 저장
@@ -276,7 +276,7 @@ public class VcServiceImpl implements VcService {
      * @return List<VcResponse>
      */
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public List<VcResponse> getVcResponse(@Valid @NotNull Long projectSeq) {
         // 프로젝트 seq 조회한 값
         List<VcSrcFile> vcSrcFileList = vcSrcFileRepository.findByVcProjectSeq(projectSeq);
@@ -311,6 +311,7 @@ public class VcServiceImpl implements VcService {
      * @return VcUrlResponse
      */
     @Override
+    @Transactional(readOnly = true)
     public VcUrlResponse getSrcUrl(@Valid @NotNull Long seq) {
         // SRC seq 로 SRC 값 조회
         VcSrcFile srcFile = vcSrcFileFind(seq);
@@ -326,6 +327,7 @@ public class VcServiceImpl implements VcService {
      * @return VcUrlResponse
      */
     @Override
+    @Transactional(readOnly = true)
     public VcUrlResponse getResultUrl(@Valid @NotNull Long seq) {
         // TRG seq 로 TRG 값 조회
         VcResultFile resultFile = vcResultFind(seq);
@@ -341,6 +343,7 @@ public class VcServiceImpl implements VcService {
      * @param text
      */
     @Override
+    @Transactional
     public VcTextResponse updateText(@Valid @NotNull Long seq, @Valid @NotNull String text) {
         // Text seq 로 Text 값 조회 검증
         VcText vcText = vcTextFind(seq);
@@ -379,6 +382,7 @@ public class VcServiceImpl implements VcService {
      * @return
      */
     @Override
+    @Transactional
     public List<VcRowResponse> updateRowOrder(List<VcRowRequest> row) {
         // row를 가지고 위에 updateRowOrder를 적용
         return row.stream()
@@ -492,7 +496,6 @@ public class VcServiceImpl implements VcService {
     @Override
     public List<VcTextRequest> vcTextResponses(List<VcTextRequest> text) {
         // srcSeq 개수 가지고 생성자 리턴
-
         return IntStream.range(0, text.size())
                 .mapToObj(i -> VcTextRequest.of(text.get(i).getSeq(), text.get(i).getText()))
                 .collect(Collectors.toList());
@@ -505,6 +508,7 @@ public class VcServiceImpl implements VcService {
      * @return List<VcUrlRequest>
      */
     @Override
+    @Transactional(readOnly = true)
     public List<VcUrlRequest> vcSrcUrlRequests(List<Long> srcSeq) {
         // srcSeq를 가지고 vcSrcFile 찾고 없으면 예외던지고 있다면 생성자로 리턴
         return srcSeq.stream()
@@ -520,6 +524,7 @@ public class VcServiceImpl implements VcService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public MultipartFile getTrgFile(Long trgSeq) throws IOException {
         try {
             MultipartFile multipartFile =
@@ -534,6 +539,7 @@ public class VcServiceImpl implements VcService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<MultipartFile> getSrcFile(List<Long> srcSeq) {
         List<VcUrlRequest> vcSrcUrlRequests = vcSrcUrlRequests(srcSeq);
         List<MultipartFile> collect =
@@ -561,6 +567,7 @@ public class VcServiceImpl implements VcService {
      * @return
      */
     @Override
+    @Transactional(readOnly = true)
     public boolean srcCheck(Long memberSeq, Long srcSeq) {
         // 행 찾기
         VcSrcFile vcSrcFile = vcSrcFileFind(srcSeq);
@@ -581,6 +588,7 @@ public class VcServiceImpl implements VcService {
      * @return
      */
     @Override
+    @Transactional(readOnly = true)
     public boolean srcCheck(Long memberSeq, List<Long> srcSeq) {
         // 위에 단일을 반복
         for (Long src : srcSeq) {
@@ -597,6 +605,7 @@ public class VcServiceImpl implements VcService {
      * @return
      */
     @Override
+    @Transactional(readOnly = true)
     public boolean resCheck(Long memberSeq, Long resSeq) {
         // 결과물찾기
         VcResultFile resultFile = vcResultFind(resSeq);
@@ -617,6 +626,7 @@ public class VcServiceImpl implements VcService {
      * @return
      */
     @Override
+    @Transactional(readOnly = true)
     public boolean textCheck(Long memberSeq, Long textSeq) {
         // Text 찾기
         VcText vcText = vcTextFind(textSeq);
