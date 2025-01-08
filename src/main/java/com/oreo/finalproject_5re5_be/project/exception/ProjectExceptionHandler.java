@@ -16,7 +16,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class ProjectExceptionHandler {
 
     @ExceptionHandler(value = ProjectNotFoundException.class) // 어떤 예외클래스를 처리할건지 지정
-    public ResponseEntity<ResponseDto<String>> ProjectNotFoundExceptionHandler(ProjectNotFoundException e, HttpServletRequest request) {
+    public ResponseEntity<ResponseDto<String>> ProjectNotFoundExceptionHandler(
+            ProjectNotFoundException e, HttpServletRequest request) {
         log.error(
                 "[Project] ProjectNotFoundExceptionHandler 호출 , {} , {}",
                 request.getRequestURI(),
@@ -26,13 +27,14 @@ public class ProjectExceptionHandler {
     }
 
     @ExceptionHandler(value = ProjectNotMemberException.class) // 어떤 예외클래스를 처리할건지 지정
-    public ResponseEntity<ResponseDto<String>> ProjectNotMemberExceptionHandler(ProjectNotMemberException e, HttpServletRequest request) {
+    public ResponseEntity<ResponseDto<String>> ProjectNotMemberExceptionHandler(
+            ProjectNotMemberException e, HttpServletRequest request) {
         log.error(
-            "[Project] ProjectNotMemberExceptionHandler 호출 , {} , {}",
-            request.getRequestURI(),
-            e.getMessage());
+                "[Project] ProjectNotMemberExceptionHandler 호출 , {} , {}",
+                request.getRequestURI(),
+                e.getMessage());
         return ResponseEntity.status(ErrorCode.PROJECT_ACCESS_DENIED.getStatus())
-            .body(new ResponseDto<>(HttpStatus.FORBIDDEN.value(), e.getMessage()));
+                .body(new ResponseDto<>(HttpStatus.FORBIDDEN.value(), e.getMessage()));
     }
 
     @ExceptionHandler(RuntimeException.class)
@@ -40,11 +42,11 @@ public class ProjectExceptionHandler {
         log.error("[project] RuntimeException 호출 : {}", e);
 
         ErrorResponseDto errorResponseDto =
-            ErrorResponseDto.of(
-                ErrorCode.INTERNAL_SERVER_ERROR.getStatus(),
-                ErrorCode.INTERNAL_SERVER_ERROR.getMessage());
+                ErrorResponseDto.of(
+                        ErrorCode.INTERNAL_SERVER_ERROR.getStatus(),
+                        ErrorCode.INTERNAL_SERVER_ERROR.getMessage());
         return ResponseEntity.status(ErrorCode.INTERNAL_SERVER_ERROR.getStatus())
-            .body(errorResponseDto);
+                .body(errorResponseDto);
     }
 
     // BusinessException 처리
@@ -53,7 +55,7 @@ public class ProjectExceptionHandler {
         log.error("[project] BusinessException 호출 : {} ", e);
 
         ErrorResponseDto errorResponseDto =
-            ErrorResponseDto.of(e.getErrorCode().getStatus(), e.getMessage());
+                ErrorResponseDto.of(e.getErrorCode().getStatus(), e.getMessage());
         return ResponseEntity.status(e.getErrorCode().getStatus()).body(errorResponseDto);
     }
 }
