@@ -62,9 +62,9 @@ public class ProjectServiceImpl implements ProjectService {
 
         // 회원 정보로 전체 조회
         List<Project> project = projectRepository.findByMemberSeq(member.getSeq());
-        log.info("[projectService] projectFindAll - project : {} ", project.toString());
         // 정보를 저장할 리스트 생성
         List<ProjectResponse> projectResponses = new ArrayList<>();
+        List<Long> projectSeqs = new ArrayList<>();
         // project 정보를 모두 넣고
         for (Project p : project) {
             ProjectResponse projectResponse =
@@ -80,8 +80,9 @@ public class ProjectServiceImpl implements ProjectService {
                             .projectActivate(p.getProActivate())
                             .build();
             projectResponses.add(projectResponse);
+            projectSeqs.add(p.getProSeq());
         }
-        log.info("[projectService] projectFindAll - projectResponses : {} ", projectResponses);
+        log.info("회원이 조회한 Project Seqs : {}", projectSeqs);
         // Response 로 추출
         return projectResponses;
     }
