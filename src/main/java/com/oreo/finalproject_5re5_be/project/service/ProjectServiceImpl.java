@@ -7,6 +7,7 @@ import com.oreo.finalproject_5re5_be.member.repository.MemberRepository;
 import com.oreo.finalproject_5re5_be.project.dto.response.ProjectResponse;
 import com.oreo.finalproject_5re5_be.project.entity.Project;
 import com.oreo.finalproject_5re5_be.project.exception.InvalidProjectNameException;
+import com.oreo.finalproject_5re5_be.project.exception.ProjectNotFoundException;
 import com.oreo.finalproject_5re5_be.project.exception.ProjectNotMemberException;
 import com.oreo.finalproject_5re5_be.project.repository.ProjectRepository;
 import com.oreo.finalproject_5re5_be.tts.repository.TtsSentenceRepository;
@@ -98,11 +99,16 @@ public class ProjectServiceImpl implements ProjectService {
         memberSeqCheck(member.getSeq());
         // 회원정보로 프로젝트 객체 생성
         Project project = Project.builder().member(member).build();
-        // 저장
-        Project save = projectRepository.save(project);
-        log.info("Save project : {}", save);
-        // 생성된 프로젝트 ID 정보 추출
-        return save.getProSeq();
+        try {
+            // 저장
+            Project save = projectRepository.save(project);
+            log.info("Save project : {}", save);
+            // 생성된 프로젝트 ID 정보 추출
+            return save.getProSeq();
+        } catch (Exception e) {
+            log.error("Error Save project 저장중 오류 : {} ", e.getMessage(), e);
+            throw new RuntimeException("Project 저장 중 오류가 발생하였습니다.");
+        }
     }
 
     /**
@@ -132,12 +138,18 @@ public class ProjectServiceImpl implements ProjectService {
     @Transactional
     public void projectDelete(List<Long> projectSeq) {
         // 리스트로 받은 프로젝트 번호를 조회
-        for (int i = 0; i < projectSeq.size(); i++) {
-            Project projectFind = projectFind(projectSeq.get(i));
-            // 프로젝트들의 상태를 N으로 변경
-            Project project = projectFind.toBuilder().proSeq(projectSeq.get(i)).proActivate('N').build();
-            // 저장
-            projectRepository.save(project);
+        try {
+            for (int i = 0; i < projectSeq.size(); i++) {
+                Project projectFind = projectFind(projectSeq.get(i));
+                // 프로젝트들의 상태를 N으로 변경
+                Project project =
+                        projectFind.toBuilder().proSeq(projectSeq.get(i)).proActivate('N').build();
+                // 저장
+                projectRepository.save(project);
+            }
+        } catch (Exception e) {
+            log.error("Error Save Porject 삭제(수정) 오류: {} ", e.getMessage(), e);
+            throw new RuntimeException("Porject 삭제(수정) 중 오류가 발생하였습니다.");
         }
     }
 
@@ -192,13 +204,13 @@ public class ProjectServiceImpl implements ProjectService {
     private Project projectFind(Long seq) {
         return projectRepository
                 .findById(seq)
-                .orElseThrow(() -> new IllegalArgumentException("project not found"));
+                .orElseThrow(() -> new ProjectNotFoundException("project not found"));
     }
 
     private Member memberFind(Long seq) {
         return memberRepository
                 .findById(seq)
-                .orElseThrow(() -> new IllegalArgumentException("Member not found"));
+                .orElseThrow(() -> new MemberNotFoundException("Member not found"));
     }
 
     private void memberSeqCheck(Long seq) {
