@@ -9,6 +9,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ProjectRepository extends JpaRepository<Project, Long> {
-    @Query("SELECT p FROM Project p JOIN p.member m WHERE m.seq = :memberSeq")
-    List<Project> findByMemberSeq(@Param("memberSeq") Long memberSeq);
+    @Query("SELECT p FROM Project p JOIN p.member m WHERE m.seq = :memberSeq AND p.proActivate = 'Y'")
+    List<Project> findByMemberSeq(@Param("memberSeq") Long memberSeq);  //1500ms
 }
