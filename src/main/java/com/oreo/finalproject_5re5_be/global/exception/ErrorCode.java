@@ -51,6 +51,17 @@ public enum ErrorCode {
 
     TTS_MAKE_INVALID_VOLUME(400, "허용되지 않는 TTS 음량입니다."),
 
+    //VC ERROR 처리
+    VC_ACCESS_DENIED(403, "회원에게 권한이 없습니다."),
+    VC_NOT_FOUND_MEMBER_ERROR(403, "VC 해당 정보가 회원에게 없습니다."),
+    VC_NOT_FOUND_ERROR(404, "해당 정보를 찾을수 없습니다."),
+    VC_NOT_FOUND_PROJECT_ERROR(404, "해당 프로젝트를 찾을수 없습니다."),
+    VC_NOT_FOUND_SRC_ERROR(404, "해당 SRC를 찾을 수 없습니다."),
+    VC_NOT_FOUND_TRG_ERROR(404, "해당 TRG를 찾을 수 없습니다."),
+    VC_NOT_FOUND_TEXT_ERROR(404, "해당 Text를 찾을 수 없습니다."),
+    VC_NOT_FOUND_RESULT_ERROR(404, "해당 결과물을 찾을 수 없습니다."),
+
+    //METHODTIME ERROR 처리
     METHODTIME_ERROR(500, "시간측정을 실패했습니다.");
 
     private final String message;

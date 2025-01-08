@@ -6,11 +6,34 @@ import com.oreo.finalproject_5re5_be.global.dto.response.AudioFileInfo;
 import com.oreo.finalproject_5re5_be.project.entity.Project;
 import com.oreo.finalproject_5re5_be.project.repository.ProjectRepository;
 import com.oreo.finalproject_5re5_be.project.service.ProjectService;
-import com.oreo.finalproject_5re5_be.vc.dto.request.*;
-import com.oreo.finalproject_5re5_be.vc.dto.response.*;
-import com.oreo.finalproject_5re5_be.vc.entity.*;
+import com.oreo.finalproject_5re5_be.vc.dto.request.VcAudioRequest;
+import com.oreo.finalproject_5re5_be.vc.dto.request.VcResultsRequest;
+import com.oreo.finalproject_5re5_be.vc.dto.request.VcRowRequest;
+import com.oreo.finalproject_5re5_be.vc.dto.request.VcSrcRequest;
+import com.oreo.finalproject_5re5_be.vc.dto.request.VcSrcsRequest;
+import com.oreo.finalproject_5re5_be.vc.dto.request.VcTextRequest;
+import com.oreo.finalproject_5re5_be.vc.dto.request.VcUrlRequest;
+import com.oreo.finalproject_5re5_be.vc.dto.response.VcActivateResponse;
+import com.oreo.finalproject_5re5_be.vc.dto.response.VcResponse;
+import com.oreo.finalproject_5re5_be.vc.dto.response.VcRowResponse;
+import com.oreo.finalproject_5re5_be.vc.dto.response.VcTextResponse;
+import com.oreo.finalproject_5re5_be.vc.dto.response.VcUrlResponse;
+import com.oreo.finalproject_5re5_be.vc.entity.Vc;
+import com.oreo.finalproject_5re5_be.vc.entity.VcResultFile;
+import com.oreo.finalproject_5re5_be.vc.entity.VcSrcFile;
+import com.oreo.finalproject_5re5_be.vc.entity.VcText;
+import com.oreo.finalproject_5re5_be.vc.entity.VcTrgFile;
+import com.oreo.finalproject_5re5_be.vc.exception.VcNotFoundProjectException;
+import com.oreo.finalproject_5re5_be.vc.exception.VcNotFoundResultException;
+import com.oreo.finalproject_5re5_be.vc.exception.VcNotFoundSrcException;
+import com.oreo.finalproject_5re5_be.vc.exception.VcNotFoundTextException;
+import com.oreo.finalproject_5re5_be.vc.exception.VcNotFoundTrgException;
 import com.oreo.finalproject_5re5_be.vc.exception.VcNotMemberException;
-import com.oreo.finalproject_5re5_be.vc.repository.*;
+import com.oreo.finalproject_5re5_be.vc.repository.VcRepository;
+import com.oreo.finalproject_5re5_be.vc.repository.VcResultFileRepository;
+import com.oreo.finalproject_5re5_be.vc.repository.VcSrcFileRepository;
+import com.oreo.finalproject_5re5_be.vc.repository.VcTextRepository;
+import com.oreo.finalproject_5re5_be.vc.repository.VcTrgFileRepository;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import java.io.File;
@@ -22,6 +45,8 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,7 +54,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
-@Slf4j
 @RequiredArgsConstructor
 @Validated
 @Transactional
@@ -63,6 +87,7 @@ public class VcServiceImpl implements VcService {
         this.projectService = projectService;
     }
 
+    private static final Logger log = LoggerFactory.getLogger(VcServiceImpl.class);
     /**
      * Vc SRC 파일 저장
      *
@@ -74,29 +99,33 @@ public class VcServiceImpl implements VcService {
     public VcUrlResponse srcSave(@Valid @NotNull VcSrcRequest vcSrcRequest, Long proSeq) {
         // VC 찾기
         Vc vc = projectFind(proSeq);
-        log.info("[vcService] srcSave vc 확인 : {} ", vc);
-
+        if(vc == null){
+            throw new VcNotFoundProjectException("VC not found ProjectSeq : " + proSeq);
+        }
         // vcSrcFileRepository를 통해 rowOrder 값 결정
         int rowOrder =
                 Optional.ofNullable(vcSrcFileRepository.countByVc_ProjectSeq(vcSrcRequest.getSeq()))
                         .map(count -> count + 1)
                         .orElse(1);
-        log.info("[vcService] srcSave rowOrder 확인 : {} ", rowOrder);
         // SRC를 찾아서 있다면 1로 없다면 사이즈만큼에서 +1해서 저장
         // 프로젝트 조회한 값과 입력한 값 저장을 하기 위한 SRC 객체 생
-        VcSrcFile save =
-                vcSrcFileRepository.save(
-                        VcSrcFile.create(
-                                vc,
-                                rowOrder,
-                                vcSrcRequest.getName(),
-                                vcSrcRequest.getFileUrl(),
-                                vcSrcRequest.getLength(),
-                                vcSrcRequest.getSize(),
-                                vcSrcRequest.getExtension())); // SRC 객체 저장
-        log.info("[vcService] srcSave save 확인 : {} ", save);
+        try {
+            VcSrcFile save =
+                    vcSrcFileRepository.save(
+                            VcSrcFile.create(
+                                    vc,
+                                    rowOrder,
+                                    vcSrcRequest.getName(),
+                                    vcSrcRequest.getFileUrl(),
+                                    vcSrcRequest.getLength(),
+                                    vcSrcRequest.getSize(),
+                                    vcSrcRequest.getExtension())); // SRC 객체 저장
 
-        return VcUrlResponse.of(save.getSrcSeq(), save.getFileUrl());
+            return VcUrlResponse.of(save.getSrcSeq(), save.getFileUrl());
+        } catch (Exception e) {
+            log.error("Error Save SRC 저장중 오류: {} ", e.getMessage(), e);
+            throw new RuntimeException("SRC 파일 저장 중 오류가 발생하였습니다.");
+        }
     }
 
     @Override
@@ -104,9 +133,14 @@ public class VcServiceImpl implements VcService {
     public List<VcUrlResponse> srcSave(
             @Valid @NotNull List<VcSrcRequest> vcSrcRequests, Long proSeq) {
         // vcSrcRequests를 srcSave로 저장시키고 리턴
-        return vcSrcRequests.stream()
-                .map(vcSrcRequest -> srcSave(vcSrcRequest, proSeq))
-                .collect(Collectors.toList());
+        try {
+            return vcSrcRequests.stream()
+                    .map(vcSrcRequest -> srcSave(vcSrcRequest, proSeq))
+                    .collect(Collectors.toList());
+        } catch (Exception e) {
+            log.error("Error Save SRC 들 저장중 오류  : {} ", e.getMessage(), e);
+            throw new RuntimeException("SRC 파일 저장 중 오류가 발생하였습니다.");
+        }
     }
 
     /**
@@ -117,23 +151,29 @@ public class VcServiceImpl implements VcService {
      */
     @Override
     public VcUrlResponse trgSave(@Valid @NotNull VcAudioRequest vcAudioRequest) {
-
+        Long proSeq = vcAudioRequest.getSeq();
         // 프로젝트 조회, 객체 생성후 저장
-        Vc vc = projectFind(vcAudioRequest.getSeq());
-        log.info("[vcService] trgSave vc 확인 : {} ", vc);
+        Vc vc = projectFind(proSeq);
+        if(vc == null){
+            throw new VcNotFoundProjectException("VC Not Found projectSeq : "+ proSeq);
+        }
 
-        // 프로젝트 조회한 값과 입력한 값을 저장하기 위한 TRG 객체 생성
-        VcTrgFile save =
-                vcTrgFileRepository.save(
-                        VcTrgFile.create(
-                                vc,
-                                vcAudioRequest.getName(),
-                                vcAudioRequest.getFileUrl(),
-                                vcAudioRequest.getLength(),
-                                vcAudioRequest.getSize(),
-                                vcAudioRequest.getExtension())); // TRG 객체 저장
-        log.info("[vcService] trgSave save 확인 : {} ", save);
-        return VcUrlResponse.of(save.getTrgSeq(), save.getFileUrl());
+        try {
+            // 프로젝트 조회한 값과 입력한 값을 저장하기 위한 TRG 객체 생성
+            VcTrgFile save =
+                    vcTrgFileRepository.save(
+                            VcTrgFile.create(
+                                    vc,
+                                    vcAudioRequest.getName(),
+                                    vcAudioRequest.getFileUrl(),
+                                    vcAudioRequest.getLength(),
+                                    vcAudioRequest.getSize(),
+                                    vcAudioRequest.getExtension())); // TRG 객체 저장
+            return VcUrlResponse.of(save.getTrgSeq(), save.getFileUrl());
+        } catch (Exception e) {
+            log.error("Error Save TRG  저장중 오류  : {} ", e.getMessage(), e);
+            throw new RuntimeException("TRG 파일 저장 중 오류가 발생하였습니다.");
+        }
     }
 
     /**
@@ -147,26 +187,38 @@ public class VcServiceImpl implements VcService {
     public VcUrlResponse resultSave(@Valid @NotNull VcAudioRequest vcAudioRequest) {
         // SRCFile 조회
         VcSrcFile srcFile = vcSrcFileFind(vcAudioRequest.getSeq());
-        log.info("[vcService] resultSave srcFile 확인 : {} ", srcFile);
+        if(srcFile == null){
+            throw new VcNotFoundSrcException("Src not found seq : " + vcAudioRequest.getSeq());
+        }
 
-        // 프로젝트 조회한 값과 SRC 조회한 값, 입력한 값을 저장하기 위한 ResultFile 객체 생성
-        VcResultFile save =
-                vcResultFileRepository.save(
-                        VcResultFile.create(
-                                srcFile,
-                                vcAudioRequest.getName(),
-                                vcAudioRequest.getFileUrl(),
-                                vcAudioRequest.getLength(),
-                                vcAudioRequest.getSize(),
-                                vcAudioRequest.getExtension())); // result 객체 저장
-        log.info("[vcService] resultSave save 확인 : {} ", save);
-        return VcUrlResponse.of(save.getResSeq(), save.getFileUrl());
+        try {
+            // 프로젝트 조회한 값과 SRC 조회한 값, 입력한 값을 저장하기 위한 ResultFile 객체 생성
+            VcResultFile save =
+                    vcResultFileRepository.save(
+                            VcResultFile.create(
+                                    srcFile,
+                                    vcAudioRequest.getName(),
+                                    vcAudioRequest.getFileUrl(),
+                                    vcAudioRequest.getLength(),
+                                    vcAudioRequest.getSize(),
+                                    vcAudioRequest.getExtension())); // result 객체 저장
+            return VcUrlResponse.of(save.getResSeq(), save.getFileUrl());
+        } catch (Exception e) {
+            log.error("Error Save Result  저장중 오류  : {} ", e.getMessage(), e);
+            throw new RuntimeException("Result 파일 저장 중 오류가 발생하였습니다.");
+        }
     }
 
+    @Override
     @Transactional
     public List<VcUrlResponse> resultSave(@Valid @NotNull List<VcAudioRequest> vcAudioRequests) {
         // vcAudioRequests를 위에 resultSave를 적용
-        return vcAudioRequests.stream().map(this::resultSave).collect(Collectors.toList());
+        try {
+            return vcAudioRequests.stream().map(this::resultSave).collect(Collectors.toList());
+        } catch (Exception e) {
+            log.error("Error Save Result들 저장중 오류  : {} ", e.getMessage(), e);
+            throw new RuntimeException("Result 파일들 저장 중 오류가 발생하였습니다.");
+        }
     }
 
     /**
@@ -180,17 +232,23 @@ public class VcServiceImpl implements VcService {
     public VcTextResponse textSave(@Valid @NotNull VcTextRequest vcTextRequest) {
         // SRC 조회
         VcSrcFile srcFile = vcSrcFileFind(vcTextRequest.getSeq());
-        log.info("[vcService] textSave srcFile 확인 : {} ", srcFile);
+        if(srcFile == null){
+            throw new VcNotFoundSrcException("Src not found seq : " + vcTextRequest.getSeq());
+        }
 
-        // SRC 조회한 값과 프로젝트 조회한 값, 입력 값 저장하기 위한 TextFile 객체 생성
-        VcText save =
-                vcTextRepository.save(
-                        VcText.create(
-                                srcFile,
-                                vcTextRequest.getText(),
-                                String.valueOf(vcTextRequest.getText().length()))); // Text 객체 저장
-        log.info("[vcService] textSave save 확인 : {} ", save);
-        return VcTextResponse.of(save.getVtSeq(), save.getComment());
+        try {
+            // SRC 조회한 값과 프로젝트 조회한 값, 입력 값 저장하기 위한 TextFile 객체 생성
+            VcText save =
+                    vcTextRepository.save(
+                            VcText.create(
+                                    srcFile,
+                                    vcTextRequest.getText(),
+                                    String.valueOf(vcTextRequest.getText().length()))); // Text 객체 저장
+            return VcTextResponse.of(save.getVtSeq(), save.getComment());
+        } catch (Exception e) {
+            log.error("Error Save Text 저장중 오류  : {} ", e.getMessage(), e);
+            throw new RuntimeException("Text 저장 중 오류가 발생하였습니다.");
+        }
     }
 
     /**
@@ -203,7 +261,12 @@ public class VcServiceImpl implements VcService {
     @Transactional
     public List<VcTextResponse> textSave(@Valid @NotNull List<VcTextRequest> vcTextRequests) {
         // vcTextRequest를 가지고 위에 textSave에 적용
-        return vcTextRequests.stream().map(this::textSave).collect(Collectors.toList());
+        try {
+            return vcTextRequests.stream().map(this::textSave).collect(Collectors.toList());
+        } catch (Exception e) {
+            log.error("Error Save Text 저장중 오류  : {} ", e.getMessage(), e);
+            throw new RuntimeException("Text 저장 중 오류가 발생하였습니다.");
+        }
     }
 
     /**
@@ -217,7 +280,6 @@ public class VcServiceImpl implements VcService {
     public List<VcResponse> getVcResponse(@Valid @NotNull Long projectSeq) {
         // 프로젝트 seq 조회한 값
         List<VcSrcFile> vcSrcFileList = vcSrcFileRepository.findByVcProjectSeq(projectSeq);
-        log.info("[vcService] getVcResponse vcSrcFileList 확인 : {} ", vcSrcFileList);
 
         // 데이터가 많을수 있으므로 병렬 처리로 변경
         return vcSrcFileList.parallelStream()
@@ -232,13 +294,10 @@ public class VcServiceImpl implements VcService {
                                             .name(vcSrcFile.getFileName())
                                             .fileUrl(vcSrcFile.getFileUrl())
                                             .build();
-                            log.info("[vcService] getVcResponse srcAudio 확인 : {} ", srcAudio);
                             // SRC 로 제일 최근에 저장한 Result 조회, 값이 없을 경우 null 처리
                             VcResultsRequest resultAudio = vcSrcFileCreate(vcSrcFile);
-                            log.info("[vcService] getVcResponse resultAudio 확인 : {} ", resultAudio);
                             // 제일 최근에 저장한 텍스트 조회, 값이 없을 경우 null 처리
                             VcTextRequest text = textCreate(vcSrcFile);
-                            log.info("[vcService] getVcResponse text 확인 : {} ", text);
                             // VcResponse 객체 생성 후 반환
                             return new VcResponse(vcSrcFile.getActivate(), srcAudio, resultAudio, text);
                         })
@@ -460,22 +519,6 @@ public class VcServiceImpl implements VcService {
                 .collect(Collectors.toList());
     }
 
-    /**
-     * trgSeq url을 찾는 메서드
-     *
-     * @param trgSeq
-     * @return VcUrlRequest
-     */
-    @Override
-    public VcUrlRequest vcTrgUrlRequest(Long trgSeq) {
-        VcTrgFile trgFile =
-                vcTrgFileRepository
-                        .findById(trgSeq)
-                        .orElseThrow(() -> new IllegalArgumentException("trgFile not found"));
-        log.info("[vcService] vcTrgUrlRequest trgFile 확인 : {} ", trgFile);
-        return VcUrlRequest.of(trgFile.getTrgSeq(), trgFile.getFileUrl());
-    }
-
     @Override
     public MultipartFile getTrgFile(Long trgSeq) throws IOException {
         try {
@@ -486,14 +529,13 @@ public class VcServiceImpl implements VcService {
             log.info("[vcService] getTrgFile multipartFile 확인 : {} ", multipartFile);
             return multipartFile;
         } catch (Exception e) {
-            throw new IOException("TRG File 오류");
+            throw new IOException("TRG File 오류", e);
         }
     }
 
     @Override
     public List<MultipartFile> getSrcFile(List<Long> srcSeq) {
         List<VcUrlRequest> vcSrcUrlRequests = vcSrcUrlRequests(srcSeq);
-        log.info("[vcService] getSrcUrl vcSrcUrlRequests 확인 : {} ", vcSrcUrlRequests);
         List<MultipartFile> collect =
                 vcSrcUrlRequests.stream()
                         .map(
@@ -504,11 +546,10 @@ public class VcServiceImpl implements VcService {
                                         srcFile = s3Service.downloadFile("vc/src/" + srcFileName);
                                         return AudioFileTypeConverter.convertFileToMultipartFile(srcFile);
                                     } catch (IOException e) {
-                                        throw new RuntimeException("SRC File 오류");
+                                        throw new RuntimeException("SRC File 오류 : ", e);
                                     }
                                 })
                         .collect(Collectors.toList());
-        log.info("[vcService] getSrcUrl collect 확인 : {} ", collect);
         return collect;
     }
 
@@ -592,7 +633,7 @@ public class VcServiceImpl implements VcService {
     private VcSrcFile vcSrcFileFind(Long seq) {
         return vcSrcFileRepository
                 .findById(seq)
-                .orElseThrow(() -> new IllegalArgumentException("Src file not found"));
+                .orElseThrow(() -> new VcNotFoundSrcException("Src file not found"));
     }
 
     // Project 찾고 vc생성 저장하는 메서드
@@ -604,21 +645,21 @@ public class VcServiceImpl implements VcService {
                                 vcRepository
                                         .findById(project.getProSeq()) // VC를 찾고 존재하지 않으면 vcSave 실행
                                         .orElseGet(() -> vcRepository.save(Vc.builder().proSeq(project).build())))
-                .orElseThrow(() -> new IllegalArgumentException("Project not found"));
+                .orElseThrow(() -> new VcNotFoundProjectException("Project not found"));
     }
 
     // VcResultFile 찾는 메서드
     private VcResultFile vcResultFind(Long seq) {
         return vcResultFileRepository
                 .findById(seq)
-                .orElseThrow(() -> new IllegalArgumentException("ResultFile not found"));
+                .orElseThrow(() -> new VcNotFoundResultException("ResultFile not found"));
     }
 
     // VcText 찾는 메서드
     private VcText vcTextFind(Long seq) {
         return vcTextRepository
                 .findById(seq)
-                .orElseThrow(() -> new IllegalArgumentException("Text not found"));
+                .orElseThrow(() -> new VcNotFoundTextException("Text not found"));
     }
 
     private VcResultsRequest vcSrcFileCreate(VcSrcFile vcSrcFile) {
@@ -645,6 +686,21 @@ public class VcServiceImpl implements VcService {
         return Optional.ofNullable(vcText)
                 .map(t -> VcTextRequest.of(t.getVtSeq(), t.getComment()))
                 .orElse(null);
+    }
+
+    /**
+     * trgSeq url을 찾는 메서드
+     *
+     * @param trgSeq
+     * @return VcUrlRequest
+     */
+    private VcUrlRequest vcTrgUrlRequest(Long trgSeq) {
+        VcTrgFile trgFile =
+            vcTrgFileRepository
+                .findById(trgSeq)
+                .orElseThrow(() -> new VcNotFoundTrgException("trgFile not found"));
+        log.info("[vcService] vcTrgUrlRequest trgFile 확인 : {} ", trgFile);
+        return VcUrlRequest.of(trgFile.getTrgSeq(), trgFile.getFileUrl());
     }
 
     private static String extractFileName(String url) {
