@@ -129,13 +129,12 @@ public class ProjectServiceImpl implements ProjectService {
         // 프로젝트 찾은 번호로 받은 프로젝트명으로 변경
         Project project = projectFind.toBuilder().proSeq(projectSeq).proName(projectName).build();
         // 수정
-        try{
+        try {
             projectRepository.save(project);
-        }catch (DataAccessException e){
+        } catch (DataAccessException e) {
             log.error("Error update Porject 프로젝트 이름 수정 오류: {} ", e.getMessage(), e);
             throw new RuntimeException("Porject 이름 수정 중 오류가 발생하였습니다.");
         }
-
     }
 
     /**
@@ -145,7 +144,7 @@ public class ProjectServiceImpl implements ProjectService {
      */
     @Override
     @Retryable(
-            value = {DataAccessException .class},
+            value = {DataAccessException.class},
             maxAttempts = 3,
             backoff = @Backoff(delay = 2000))
     @Transactional
