@@ -59,10 +59,7 @@ public enum ErrorCode {
     VC_NOT_FOUND_SRC_ERROR(404, "해당 SRC를 찾을 수 없습니다."),
     VC_NOT_FOUND_TRG_ERROR(404, "해당 TRG를 찾을 수 없습니다."),
     VC_NOT_FOUND_TEXT_ERROR(404, "해당 Text를 찾을 수 없습니다."),
-    VC_NOT_FOUND_RESULT_ERROR(404, "해당 결과물을 찾을 수 없습니다."),
-
-    // METHODTIME ERROR 처리
-    METHODTIME_ERROR(500, "시간측정을 실패했습니다.");
+    VC_NOT_FOUND_RESULT_ERROR(404, "해당 결과물을 찾을 수 없습니다.");
 
     private final String message;
     private final int status;
