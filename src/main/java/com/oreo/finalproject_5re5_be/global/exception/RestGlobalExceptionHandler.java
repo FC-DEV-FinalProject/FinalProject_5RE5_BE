@@ -10,7 +10,7 @@ import org.springframework.web.multipart.MultipartException;
 @RestControllerAdvice
 public class RestGlobalExceptionHandler {
 
-    @ExceptionHandler(MethodTimeException.class)
+    @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<ResponseDto<String>> handleMethodException(DataNotFoundException ex) {
         return new ResponseDto<>(HttpStatus.NOT_FOUND.value(), ex.getMessage()).toResponseEntity();
     }
