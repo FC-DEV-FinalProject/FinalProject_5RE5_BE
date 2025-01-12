@@ -95,9 +95,9 @@ public class VcServiceImpl implements VcService {
      */
     @Override
     @Transactional
-    public VcUrlResponse srcSave(@Valid @NotNull VcSrcRequest vcSrcRequest, Long proSeq) {
+    public VcUrlResponse saveSrc(@Valid @NotNull VcSrcRequest vcSrcRequest, Long proSeq) {
         // VC 찾기
-        Vc vc = projectFind(proSeq);
+        Vc vc = findProject(proSeq);
         if (vc == null) {
             throw new VcNotFoundProjectException("VC not found ProjectSeq : " + proSeq);
         }
@@ -123,18 +123,18 @@ public class VcServiceImpl implements VcService {
             return VcUrlResponse.of(save.getSrcSeq(), save.getFileUrl());
         } catch (Exception e) {
             log.error("Error Save SRC 저장중 오류: {} ", e.getMessage(), e);
-            throw new RuntimeException("SRC 파일 저장 중 오류가 발생하였습니다.");
+            throw e;
         }
     }
 
     @Override
     @Transactional
-    public List<VcUrlResponse> srcSave(
+    public List<VcUrlResponse> saveSrc(
             @Valid @NotNull List<VcSrcRequest> vcSrcRequests, Long proSeq) {
         // vcSrcRequests를 srcSave로 저장시키고 리턴
         try {
             return vcSrcRequests.stream()
-                    .map(vcSrcRequest -> srcSave(vcSrcRequest, proSeq))
+                    .map(vcSrcRequest -> saveSrc(vcSrcRequest, proSeq))
                     .collect(Collectors.toList());
         } catch (Exception e) {
             log.error("Error Save SRC 들 저장중 오류  : {} ", e.getMessage(), e);
@@ -150,10 +150,10 @@ public class VcServiceImpl implements VcService {
      */
     @Override
     @Transactional
-    public VcUrlResponse trgSave(@Valid @NotNull VcAudioRequest vcAudioRequest) {
+    public VcUrlResponse saveTrg(@Valid @NotNull VcAudioRequest vcAudioRequest) {
         Long proSeq = vcAudioRequest.getSeq();
         // 프로젝트 조회, 객체 생성후 저장
-        Vc vc = projectFind(proSeq);
+        Vc vc = findProject(proSeq);
         if (vc == null) {
             throw new VcNotFoundProjectException("VC Not Found projectSeq : " + proSeq);
         }
@@ -184,9 +184,9 @@ public class VcServiceImpl implements VcService {
      */
     @Override
     @Transactional
-    public VcUrlResponse resultSave(@Valid @NotNull VcAudioRequest vcAudioRequest) {
+    public VcUrlResponse saveResult(@Valid @NotNull VcAudioRequest vcAudioRequest) {
         // SRCFile 조회
-        VcSrcFile srcFile = vcSrcFileFind(vcAudioRequest.getSeq());
+        VcSrcFile srcFile = findVcSrcFile(vcAudioRequest.getSeq());
         if (srcFile == null) {
             throw new VcNotFoundSrcException("Src not found seq : " + vcAudioRequest.getSeq());
         }
@@ -211,10 +211,10 @@ public class VcServiceImpl implements VcService {
 
     @Override
     @Transactional
-    public List<VcUrlResponse> resultSave(@Valid @NotNull List<VcAudioRequest> vcAudioRequests) {
+    public List<VcUrlResponse> saveResult(@Valid @NotNull List<VcAudioRequest> vcAudioRequests) {
         // vcAudioRequests를 위에 resultSave를 적용
         try {
-            return vcAudioRequests.stream().map(this::resultSave).collect(Collectors.toList());
+            return vcAudioRequests.stream().map(this::saveResult).collect(Collectors.toList());
         } catch (Exception e) {
             log.error("Error Save Result들 저장중 오류  : {} ", e.getMessage(), e);
             throw new RuntimeException("Result 파일들 저장 중 오류가 발생하였습니다.");
@@ -229,9 +229,9 @@ public class VcServiceImpl implements VcService {
      */
     @Override
     @Transactional
-    public VcTextResponse textSave(@Valid @NotNull VcTextRequest vcTextRequest) {
+    public VcTextResponse saveText(@Valid @NotNull VcTextRequest vcTextRequest) {
         // SRC 조회
-        VcSrcFile srcFile = vcSrcFileFind(vcTextRequest.getSeq());
+        VcSrcFile srcFile = findVcSrcFile(vcTextRequest.getSeq());
         if (srcFile == null) {
             throw new VcNotFoundSrcException("Src not found seq : " + vcTextRequest.getSeq());
         }
@@ -259,10 +259,10 @@ public class VcServiceImpl implements VcService {
      */
     @Override
     @Transactional
-    public List<VcTextResponse> textSave(@Valid @NotNull List<VcTextRequest> vcTextRequests) {
+    public List<VcTextResponse> saveText(@Valid @NotNull List<VcTextRequest> vcTextRequests) {
         // vcTextRequest를 가지고 위에 textSave에 적용
         try {
-            return vcTextRequests.stream().map(this::textSave).collect(Collectors.toList());
+            return vcTextRequests.stream().map(this::saveText).collect(Collectors.toList());
         } catch (Exception e) {
             log.error("Error Save Text 저장중 오류  : {} ", e.getMessage(), e);
             throw new RuntimeException("Text 저장 중 오류가 발생하였습니다.");
@@ -295,9 +295,9 @@ public class VcServiceImpl implements VcService {
                                             .fileUrl(vcSrcFile.getFileUrl())
                                             .build();
                             // SRC 로 제일 최근에 저장한 Result 조회, 값이 없을 경우 null 처리
-                            VcResultsRequest resultAudio = vcSrcFileCreate(vcSrcFile);
+                            VcResultsRequest resultAudio = createVcSrcFile(vcSrcFile);
                             // 제일 최근에 저장한 텍스트 조회, 값이 없을 경우 null 처리
-                            VcTextRequest text = textCreate(vcSrcFile);
+                            VcTextRequest text = createText(vcSrcFile);
                             // VcResponse 객체 생성 후 반환
                             return new VcResponse(vcSrcFile.getActivate(), srcAudio, resultAudio, text);
                         })
@@ -314,7 +314,7 @@ public class VcServiceImpl implements VcService {
     @Transactional(readOnly = true)
     public VcUrlResponse getSrcUrl(@Valid @NotNull Long seq) {
         // SRC seq 로 SRC 값 조회
-        VcSrcFile srcFile = vcSrcFileFind(seq);
+        VcSrcFile srcFile = findVcSrcFile(seq);
         log.info("[vcService] getSrcFile srcFile 확인 : {} ", srcFile);
         // S3 SRC URL 값 출력
         return VcUrlResponse.of(srcFile.getSrcSeq(), srcFile.getFileUrl());
@@ -330,7 +330,7 @@ public class VcServiceImpl implements VcService {
     @Transactional(readOnly = true)
     public VcUrlResponse getResultUrl(@Valid @NotNull Long seq) {
         // TRG seq 로 TRG 값 조회
-        VcResultFile resultFile = vcResultFind(seq);
+        VcResultFile resultFile = findVcResult(seq);
         log.info("[vcService] getResultFile resultFile 확인 : {} ", resultFile);
         // S3 TRG URL 값 출력
         return VcUrlResponse.of(resultFile.getResSeq(), resultFile.getFileUrl());
@@ -346,7 +346,7 @@ public class VcServiceImpl implements VcService {
     @Transactional
     public VcTextResponse updateText(@Valid @NotNull Long seq, @Valid @NotNull String text) {
         // Text seq 로 Text 값 조회 검증
-        VcText vcText = vcTextFind(seq);
+        VcText vcText = findVcText(seq);
         log.info("[vcService] updateText vcText 확인 : {} ", vcText);
 
         // 변경할 값과 seq 값 변경 객체 생성
@@ -367,7 +367,7 @@ public class VcServiceImpl implements VcService {
     @Transactional
     public VcRowResponse updateRowOrder(@Valid @NotNull Long seq, @Valid @NotNull int rowOrder) {
         // 변경할 행순서 값과 SRC seq 값 변경 객체 생성
-        VcSrcFile updateSrcFile = vcSrcFileFind(seq).toBuilder().rowOrder(rowOrder).build();
+        VcSrcFile updateSrcFile = findVcSrcFile(seq).toBuilder().rowOrder(rowOrder).build();
         log.info("[vcService] updateRowOrder updateSrcFile 확인 : {} ", updateSrcFile);
 
         VcSrcFile save = vcSrcFileRepository.save(updateSrcFile); // 행순서 변경
@@ -399,7 +399,7 @@ public class VcServiceImpl implements VcService {
     @Transactional
     public VcActivateResponse deleteSrcFile(@Valid @NotNull Long seq) {
         // 활성화 상태 N로 변경
-        VcSrcFile deleteSrcFile = vcSrcFileFind(seq).toBuilder().activate('N').build();
+        VcSrcFile deleteSrcFile = findVcSrcFile(seq).toBuilder().activate('N').build();
         log.info("[vcService] deleteSrcFile deleteSrcFile 확인 : {} ", deleteSrcFile);
         // 활성화상태 변경
         VcSrcFile save = vcSrcFileRepository.save(deleteSrcFile);
@@ -429,7 +429,7 @@ public class VcServiceImpl implements VcService {
      * @return
      */
     @Override
-    public List<VcSrcRequest> vcSrcRequestBuilder(
+    public List<VcSrcRequest> requestBuilderVcSrc(
             List<AudioFileInfo> audioFileInfos, List<String> upload, Long proSeq) {
         // audioFileInfos 개수 만큼 VcSrcRequest audioinfo, url, proSeq 적용해서 builder 패턴으로 리턴
         return IntStream.range(0, audioFileInfos.size())
@@ -456,7 +456,7 @@ public class VcServiceImpl implements VcService {
      * @return
      */
     @Override
-    public VcAudioRequest audioRequestBuilder(Long proSeq, AudioFileInfo info, String url) {
+    public VcAudioRequest requestBuilderAudio(Long proSeq, AudioFileInfo info, String url) {
         // static 정적 메서드로 리턴
         return VcAudioRequest.of(
                 proSeq, info.getName(), url, info.getLength(), info.getSize(), info.getExtension());
@@ -471,7 +471,7 @@ public class VcServiceImpl implements VcService {
      * @return
      */
     @Override
-    public List<VcAudioRequest> audioRequestBuilder(
+    public List<VcAudioRequest> requestBuilderAudio(
             List<VcUrlRequest> vcUrlRequest, List<AudioFileInfo> info, List<String> url) {
         // vcSrcUrlRequest 사이즈 만큼 반복 하여 생성자 리턴
         return IntStream.range(0, vcUrlRequest.size())
@@ -494,7 +494,7 @@ public class VcServiceImpl implements VcService {
      * @return
      */
     @Override
-    public List<VcTextRequest> vcTextResponses(List<VcTextRequest> text) {
+    public List<VcTextRequest> responsesVcText(List<VcTextRequest> text) {
         // srcSeq 개수 가지고 생성자 리턴
         return IntStream.range(0, text.size())
                 .mapToObj(i -> VcTextRequest.of(text.get(i).getSeq(), text.get(i).getText()))
@@ -509,7 +509,7 @@ public class VcServiceImpl implements VcService {
      */
     @Override
     @Transactional(readOnly = true)
-    public List<VcUrlRequest> vcSrcUrlRequests(List<Long> srcSeq) {
+    public List<VcUrlRequest> requestsVcSrcUrl(List<Long> srcSeq) {
         // srcSeq를 가지고 vcSrcFile 찾고 없으면 예외던지고 있다면 생성자로 리턴
         return srcSeq.stream()
                 .map(
@@ -529,8 +529,8 @@ public class VcServiceImpl implements VcService {
         try {
             MultipartFile multipartFile =
                     AudioFileTypeConverter.convertFileToMultipartFile(
-                            s3Service.downloadFile(
-                                    "vc/trg/" + extractFileName(vcTrgUrlRequest(trgSeq).getUrl())));
+                            AWSS3Service.downloadFile(
+                                    "vc/trg/" + extractFileName(requestVcTrgUrl(trgSeq).getUrl())));
             log.info("[vcService] getTrgFile multipartFile 확인 : {} ", multipartFile);
             return multipartFile;
         } catch (Exception e) {
@@ -541,7 +541,7 @@ public class VcServiceImpl implements VcService {
     @Override
     @Transactional(readOnly = true)
     public List<MultipartFile> getSrcFile(List<Long> srcSeq) {
-        List<VcUrlRequest> vcSrcUrlRequests = vcSrcUrlRequests(srcSeq);
+        List<VcUrlRequest> vcSrcUrlRequests = requestsVcSrcUrl(srcSeq);
         List<MultipartFile> collect =
                 vcSrcUrlRequests.stream()
                         .map(
@@ -549,7 +549,7 @@ public class VcServiceImpl implements VcService {
                                     String srcFileName = extractFileName(vcSrcUrlRequest.getUrl());
                                     File srcFile = null;
                                     try {
-                                        srcFile = s3Service.downloadFile("vc/src/" + srcFileName);
+                                        srcFile = AWSS3Service.downloadFile("vc/src/" + srcFileName);
                                         return AudioFileTypeConverter.convertFileToMultipartFile(srcFile);
                                     } catch (IOException e) {
                                         throw new RuntimeException("SRC File 오류 : ", e);
@@ -568,9 +568,9 @@ public class VcServiceImpl implements VcService {
      */
     @Override
     @Transactional(readOnly = true)
-    public boolean srcCheck(Long memberSeq, Long srcSeq) {
+    public boolean checkSrc(Long memberSeq, Long srcSeq) {
         // 행 찾기
-        VcSrcFile vcSrcFile = vcSrcFileFind(srcSeq);
+        VcSrcFile vcSrcFile = findVcSrcFile(srcSeq);
         // 행에서 프로젝트 찾기
         Project proSeq = vcSrcFile.getVc().getProSeq();
         // 프로젝트에서 회원정보로 회원확인
@@ -589,10 +589,10 @@ public class VcServiceImpl implements VcService {
      */
     @Override
     @Transactional(readOnly = true)
-    public boolean srcCheck(Long memberSeq, List<Long> srcSeq) {
+    public boolean checkSrc(Long memberSeq, List<Long> srcSeq) {
         // 위에 단일을 반복
         for (Long src : srcSeq) {
-            srcCheck(memberSeq, src);
+            checkSrc(memberSeq, src);
         }
         return true;
     }
@@ -606,13 +606,13 @@ public class VcServiceImpl implements VcService {
      */
     @Override
     @Transactional(readOnly = true)
-    public boolean resCheck(Long memberSeq, Long resSeq) {
+    public boolean checkRes(Long memberSeq, Long resSeq) {
         // 결과물찾기
-        VcResultFile resultFile = vcResultFind(resSeq);
+        VcResultFile resultFile = findVcResult(resSeq);
         // 결과물로 src찾기
         VcSrcFile srcSeq = resultFile.getSrcSeq();
         // 위에 src 단일로 회원 비교
-        if (srcCheck(memberSeq, srcSeq.getSrcSeq())) {
+        if (checkSrc(memberSeq, srcSeq.getSrcSeq())) {
             return true;
         }
         throw new VcNotMemberException();
@@ -627,27 +627,27 @@ public class VcServiceImpl implements VcService {
      */
     @Override
     @Transactional(readOnly = true)
-    public boolean textCheck(Long memberSeq, Long textSeq) {
+    public boolean checkText(Long memberSeq, Long textSeq) {
         // Text 찾기
-        VcText vcText = vcTextFind(textSeq);
+        VcText vcText = findVcText(textSeq);
         // SRC 찾기
         VcSrcFile srcSeq = vcText.getSrcSeq();
         // 위에 단일메서드 호출
-        if (srcCheck(memberSeq, srcSeq.getSrcSeq())) {
+        if (checkSrc(memberSeq, srcSeq.getSrcSeq())) {
             return true;
         }
         throw new VcNotMemberException();
     }
 
     // VcSrcFile 찾는 메서드
-    private VcSrcFile vcSrcFileFind(Long seq) {
+    private VcSrcFile findVcSrcFile(Long seq) {
         return vcSrcFileRepository
                 .findById(seq)
                 .orElseThrow(() -> new VcNotFoundSrcException("Src file not found"));
     }
 
     // Project 찾고 vc생성 저장하는 메서드
-    private Vc projectFind(Long seq) {
+    private Vc findProject(Long seq) {
         return projectRepository
                 .findById(seq)
                 .map(
@@ -659,20 +659,20 @@ public class VcServiceImpl implements VcService {
     }
 
     // VcResultFile 찾는 메서드
-    private VcResultFile vcResultFind(Long seq) {
+    private VcResultFile findVcResult(Long seq) {
         return vcResultFileRepository
                 .findById(seq)
                 .orElseThrow(() -> new VcNotFoundResultException("ResultFile not found"));
     }
 
     // VcText 찾는 메서드
-    private VcText vcTextFind(Long seq) {
+    private VcText findVcText(Long seq) {
         return vcTextRepository
                 .findById(seq)
                 .orElseThrow(() -> new VcNotFoundTextException("Text not found"));
     }
 
-    private VcResultsRequest vcSrcFileCreate(VcSrcFile vcSrcFile) {
+    private VcResultsRequest createVcSrcFile(VcSrcFile vcSrcFile) {
         // SRC 로 제일 최근에 저장한 Result 조회, 값이 없을 경우 null 처리
         VcResultFile vcResultFile =
                 vcResultFileRepository.findFirstBySrcSeq_SrcSeqOrderBySrcSeqDesc(vcSrcFile.getSrcSeq());
@@ -688,7 +688,7 @@ public class VcServiceImpl implements VcService {
                 .orElse(null);
     }
 
-    private VcTextRequest textCreate(VcSrcFile vcSrcFile) {
+    private VcTextRequest createText(VcSrcFile vcSrcFile) {
         // 제일 최근에 저장한 텍스트 조회, 값이 없을 경우 null 처리
         VcText vcText =
                 vcTextRepository.findFirstBySrcSeq_SrcSeqOrderBySrcSeqDesc(vcSrcFile.getSrcSeq());
@@ -704,7 +704,7 @@ public class VcServiceImpl implements VcService {
      * @param trgSeq
      * @return VcUrlRequest
      */
-    private VcUrlRequest vcTrgUrlRequest(Long trgSeq) {
+    private VcUrlRequest requestVcTrgUrl(Long trgSeq) {
         VcTrgFile trgFile =
                 vcTrgFileRepository
                         .findById(trgSeq)

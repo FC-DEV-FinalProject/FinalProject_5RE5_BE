@@ -11,22 +11,22 @@ import org.springframework.web.multipart.MultipartFile;
 
 public interface VcService {
     // SRC 단일, 리스트 저장
-    VcUrlResponse srcSave(@Valid @NotNull VcSrcRequest vcSrcRequest, Long proSeq);
+    VcUrlResponse saveSrc(@Valid @NotNull VcSrcRequest vcSrcRequest, Long proSeq);
 
-    List<VcUrlResponse> srcSave(@Valid @NotNull List<VcSrcRequest> vcSrcRequest, Long proSeq);
+    List<VcUrlResponse> saveSrc(@Valid @NotNull List<VcSrcRequest> vcSrcRequest, Long proSeq);
 
     // TRG 단일 저장
-    VcUrlResponse trgSave(@Valid @NotNull VcAudioRequest vcAudioRequest);
+    VcUrlResponse saveTrg(@Valid @NotNull VcAudioRequest vcAudioRequest);
 
     // Text 단일, 리스트 저장
-    VcTextResponse textSave(@Valid @NotNull VcTextRequest vcTextRequest);
+    VcTextResponse saveText(@Valid @NotNull VcTextRequest vcTextRequest);
 
-    List<VcTextResponse> textSave(@Valid @NotNull List<VcTextRequest> vcTextRequest);
+    List<VcTextResponse> saveText(@Valid @NotNull List<VcTextRequest> vcTextRequest);
 
     // Result 단일, 리스트 저장
-    VcUrlResponse resultSave(@Valid @NotNull VcAudioRequest vcAudioRequest);
+    VcUrlResponse saveResult(@Valid @NotNull VcAudioRequest vcAudioRequest);
 
-    List<VcUrlResponse> resultSave(@Valid @NotNull List<VcAudioRequest> vcAudioRequests);
+    List<VcUrlResponse> saveResult(@Valid @NotNull List<VcAudioRequest> vcAudioRequests);
 
     // VC 응답값 추출
     List<VcResponse> getVcResponse(@Valid @NotNull Long projectSeq);
@@ -44,25 +44,25 @@ public interface VcService {
 
     List<VcRowResponse> updateRowOrder(@Valid @NotNull List<VcRowRequest> row);
 
-    // SRC 파일 삭제 단일, 리스ㅡㅌ
+    // SRC 파일 삭제 단일, 리스트
     VcActivateResponse deleteSrcFile(@Valid @NotNull Long seq);
 
     List<VcActivateResponse> deleteSrcFile(@Valid @NotNull List<Long> seqs);
 
     // 요청값 Builder 로 객체 생성
-    List<VcSrcRequest> vcSrcRequestBuilder(
+    List<VcSrcRequest> requestBuilderVcSrc(
             List<AudioFileInfo> audioFileInfos, List<String> upload, Long proSeq);
 
-    VcAudioRequest audioRequestBuilder(Long proSeq, AudioFileInfo info, String url);
+    VcAudioRequest requestBuilderAudio(Long proSeq, AudioFileInfo info, String url);
 
-    List<VcAudioRequest> audioRequestBuilder(
+    List<VcAudioRequest> requestBuilderAudio(
             List<VcUrlRequest> vcUrlRequest, List<AudioFileInfo> info, List<String> url);
 
     // VC Text Request 객체 생성
-    List<VcTextRequest> vcTextResponses(List<VcTextRequest> text);
+    List<VcTextRequest> responsesVcText(List<VcTextRequest> text);
 
     // SRC URL 추출
-    List<VcUrlRequest> vcSrcUrlRequests(List<Long> srcSeq);
+    List<VcUrlRequest> requestsVcSrcUrl(List<Long> srcSeq);
 
     // Src, TRG S3에서 파일 다운로드
     MultipartFile getTrgFile(Long trgSeq) throws IOException;
@@ -70,11 +70,11 @@ public interface VcService {
     List<MultipartFile> getSrcFile(List<Long> srcSeq);
 
     // 회원의 정보인지 체크하는 기능
-    boolean srcCheck(Long memberSeq, Long srcSeq);
+    boolean checkSrc(Long memberSeq, Long srcSeq);
 
-    boolean srcCheck(Long memberSeq, List<Long> srcSeq);
+    boolean checkSrc(Long memberSeq, List<Long> srcSeq);
 
-    boolean resCheck(Long memberSeq, Long resSeq);
+    boolean checkRes(Long memberSeq, Long resSeq);
 
-    boolean textCheck(Long memberSeq, Long textSeq);
+    boolean checkText(Long memberSeq, Long textSeq);
 }
