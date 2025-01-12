@@ -529,7 +529,7 @@ public class VcServiceImpl implements VcService {
         try {
             MultipartFile multipartFile =
                     AudioFileTypeConverter.convertFileToMultipartFile(
-                            AWSS3Service.downloadFile(
+                            s3Service.downloadFile(
                                     "vc/trg/" + extractFileName(requestVcTrgUrl(trgSeq).getUrl())));
             log.info("[vcService] getTrgFile multipartFile 확인 : {} ", multipartFile);
             return multipartFile;
@@ -549,7 +549,7 @@ public class VcServiceImpl implements VcService {
                                     String srcFileName = extractFileName(vcSrcUrlRequest.getUrl());
                                     File srcFile = null;
                                     try {
-                                        srcFile = AWSS3Service.downloadFile("vc/src/" + srcFileName);
+                                        srcFile = s3Service.downloadFile("vc/src/" + srcFileName);
                                         return AudioFileTypeConverter.convertFileToMultipartFile(srcFile);
                                     } catch (IOException e) {
                                         throw new RuntimeException("SRC File 오류 : ", e);

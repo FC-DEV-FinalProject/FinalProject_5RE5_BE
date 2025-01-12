@@ -32,7 +32,8 @@ public class MethodTime {
                     joinPoint.getSignature().toShortString(),
                     e.getMessage(),
                     e);
-            throw new RuntimeException("AOP 시간 측정 처리 중 예외 발생: " + joinPoint.getSignature().toShortString(), e);
+            throw new RuntimeException(
+                    "AOP 시간 측정 처리 중 예외 발생: " + joinPoint.getSignature().toShortString(), e);
         } finally {
             stopWatch.stop();
             log.info(
