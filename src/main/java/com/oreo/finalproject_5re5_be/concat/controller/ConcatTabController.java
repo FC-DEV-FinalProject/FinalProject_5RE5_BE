@@ -30,7 +30,7 @@ public class ConcatTabController {
     @PostMapping("create")
     public ResponseEntity<ResponseDto<Boolean>> create(
             @AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestParam Long projectSeq) {
-        projectService.projectCheck(customUserDetails.getMember().getSeq(), projectSeq);
+        projectService.checkProject(customUserDetails.getMember().getSeq(), projectSeq);
         // 사용자 예외처리
         return new ResponseDto<>(
                         HttpStatus.OK.value(),
@@ -43,7 +43,7 @@ public class ConcatTabController {
     @GetMapping("read")
     public ResponseEntity<ResponseDto<ConcatTabResponseDto>> read(
             @RequestParam Long projectSeq, @AuthenticationPrincipal CustomUserDetails customUserDetails) {
-        projectService.projectCheck(customUserDetails.getMember().getSeq(), projectSeq);
+        projectService.checkProject(customUserDetails.getMember().getSeq(), projectSeq);
         // 사용자 예외 처리
         return new ResponseDto<>(
                         HttpStatus.OK.value(),
@@ -56,7 +56,7 @@ public class ConcatTabController {
     public ResponseEntity<ResponseDto<Boolean>> update(
             @RequestBody ConcatUpdateRequestDto updateRequestDto,
             @AuthenticationPrincipal CustomUserDetails customUserDetails) {
-        projectService.projectCheck(
+        projectService.checkProject(
                 customUserDetails.getMember().getSeq(), updateRequestDto.getTabId());
         return new ResponseDto<>(
                         HttpStatus.OK.value(),
@@ -76,7 +76,7 @@ public class ConcatTabController {
                     List<Long> bgmAudioFileSeqs,
             @AuthenticationPrincipal CustomUserDetails customUserDetails) {
         // 프로젝트 권한 확인
-        projectService.projectCheck(customUserDetails.getMember().getSeq(), tabSeq);
+        projectService.checkProject(customUserDetails.getMember().getSeq(), tabSeq);
 
         // BGM 업데이트 처리
         boolean result = concatTabService.updateBgmAudioFiles(tabSeq, bgmAudioFileSeqs);

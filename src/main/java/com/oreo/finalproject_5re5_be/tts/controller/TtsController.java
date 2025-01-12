@@ -144,7 +144,7 @@ public class TtsController {
             HttpSession session) {
         // 회원의 정보인지 확인
         Long memberSeq = (Long) session.getAttribute("memberSeq");
-        projectService.projectCheck(memberSeq, proSeq);
+        projectService.checkProject(memberSeq, proSeq);
 
         // 문장 생성
         TtsSentenceDto response = ttsSentenceService.addSentence(proSeq, createRequest);
@@ -169,7 +169,7 @@ public class TtsController {
             HttpSession session) {
         // 회원의 정보인지 확인
         Long memberSeq = (Long) session.getAttribute("memberSeq");
-        projectService.projectCheck(memberSeq, proSeq);
+        projectService.checkProject(memberSeq, proSeq);
 
         // 해당 문장을 소유한 멤버인지 확인 (문장 수정 권한 확인)
         ttsSentenceService.checkSentenceWithMember(memberSeq, proSeq, tsSeq);
@@ -196,7 +196,7 @@ public class TtsController {
             HttpSession session) {
         // 회원의 정보인지 확인
         Long memberSeq = (Long) session.getAttribute("memberSeq");
-        projectService.projectCheck(memberSeq, proSeq);
+        projectService.checkProject(memberSeq, proSeq);
 
         // 해당 문장을 소유한 멤버인지 확인 (문장 수정 권한 확인)
         ttsSentenceService.checkSentenceWithMember(memberSeq, proSeq, batchRequest.getSentenceList());
@@ -251,7 +251,7 @@ public class TtsController {
             HttpSession session) {
         // 회원의 정보인지 확인
         Long memberSeq = (Long) session.getAttribute("memberSeq");
-        projectService.projectCheck(memberSeq, proSeq);
+        projectService.checkProject(memberSeq, proSeq);
 
         // 해당 문장을 소유한 멤버인지 확인 (문장 수정 권한 확인)
         ttsSentenceService.checkSentenceWithMember(memberSeq, proSeq, tsSeq);
@@ -305,7 +305,7 @@ public class TtsController {
             HttpSession session) {
         // 회원의 정보인지 확인
         Long memberSeq = (Long) session.getAttribute("memberSeq");
-        projectService.projectCheck(memberSeq, proSeq);
+        projectService.checkProject(memberSeq, proSeq);
 
         // 회원이 소유한 tts 문장인지 확인
         ttsSentenceService.checkSentenceWithMember(memberSeq, proSeq, tsSeq);

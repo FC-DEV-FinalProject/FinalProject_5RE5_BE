@@ -119,7 +119,7 @@ class TestUpdateSentence {
                 .thenReturn(response);
 
         // projectService.projectCheck 메서드가 호출되면 true 반환
-        when(projectService.projectCheck(1L, 1L)).thenReturn(true);
+        when(projectService.checkProject(1L, 1L)).thenReturn(true);
 
         // mockHttpSession 생성
         MockHttpSession mockHttpSession = new MockHttpSession();
@@ -153,7 +153,7 @@ class TestUpdateSentence {
         TtsSentenceRequest requestBody = createSentenceRequest(attributeInfo);
 
         // projectService.projectCheck 메서드가 호출되면 true 반환
-        when(projectService.projectCheck(1L, 1L)).thenReturn(true);
+        when(projectService.checkProject(1L, 1L)).thenReturn(true);
 
         // mockHttpSession 생성
         MockHttpSession mockHttpSession = new MockHttpSession();
@@ -210,7 +210,7 @@ class TestUpdateSentence {
                         new EntityNotFoundException("Project not found with id: " + nonExistentProjectSeq));
 
         // projectService.projectCheck 메서드가 호출되면 true 반환
-        when(projectService.projectCheck(1L, 1L)).thenReturn(true);
+        when(projectService.checkProject(1L, 1L)).thenReturn(true);
 
         // mockHttpSession 생성
         MockHttpSession mockHttpSession = new MockHttpSession();
@@ -249,7 +249,7 @@ class TestUpdateSentence {
                 .thenThrow(new RuntimeException("Unexpected error"));
 
         // projectService.projectCheck 메서드가 호출되면 true 반환
-        when(projectService.projectCheck(1L, 1L)).thenReturn(true);
+        when(projectService.checkProject(1L, 1L)).thenReturn(true);
 
         // mockHttpSession 생성
         MockHttpSession mockHttpSession = new MockHttpSession();

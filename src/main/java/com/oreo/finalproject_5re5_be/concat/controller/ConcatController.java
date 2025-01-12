@@ -37,7 +37,7 @@ public class ConcatController {
             @RequestBody ConcatRowRequestDto audioRequests,
             @AuthenticationPrincipal CustomUserDetails customUserDetails)
             throws IOException, ExecutionException, InterruptedException {
-        projectService.projectCheck(
+        projectService.checkProject(
                 customUserDetails.getMember().getSeq(), audioRequests.getConcatTabId());
 
         ConcatTabResponseDto concatTabResponseDto =
@@ -69,7 +69,7 @@ public class ConcatController {
     @GetMapping("read/result")
     public ResponseEntity<ResponseDto<List<ConcatResultDto>>> readConcatResult(
             @RequestParam Long projectSeq, @AuthenticationPrincipal CustomUserDetails userDetails) {
-        projectService.projectCheck(userDetails.getMember().getSeq(), projectSeq);
+        projectService.checkProject(userDetails.getMember().getSeq(), projectSeq);
 
         return new ResponseDto<>(
                         HttpStatus.OK.value(), concatResultService.findByConcatTabSequence(projectSeq))

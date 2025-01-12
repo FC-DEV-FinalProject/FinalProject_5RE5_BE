@@ -54,9 +54,9 @@ public class ProjectServiceImpl implements ProjectService {
      */
     @Override
     @Transactional
-    public List<ProjectResponse> projectFindAll(Long memberSeq) {
+    public List<ProjectResponse> findAllProject(Long memberSeq) {
         log.info("[projectService] projectFindAll - memberSeq : {} ", memberSeq);
-        Member member = memberFind(memberSeq);
+        Member member = findMember(memberSeq);
         log.info("[projectService] projectFindAll - member : {} ", member.toString());
         // member 확인후 예외 던지기
         //        memberSeqCheck(member.getSeq());
@@ -93,10 +93,10 @@ public class ProjectServiceImpl implements ProjectService {
      * @return Long
      */
     @Override
-    public Long projectSave(Long memberSeq) {
+    public Long saveProject(Long memberSeq) {
         // 회원정보 추출
-        Member member = memberFind(memberSeq);
-        memberSeqCheck(member.getSeq());
+        Member member = findMember(memberSeq);
+        checkMemberSeq(member.getSeq());
         // 회원정보로 프로젝트 객체 생성
         Project project = Project.builder().member(member).build();
         try {
@@ -118,11 +118,11 @@ public class ProjectServiceImpl implements ProjectService {
      * @param projectName
      */
     @Override
-    public void projectUpdate(Long projectSeq, String projectName) {
+    public void updateProject(Long projectSeq, String projectName) {
         // 프로젝트 길이 제한
         validateProjectName(projectName);
         // 프로젝트 번호로 프로젝트 찾기
-        Project projectFind = projectFind(projectSeq);
+        Project projectFind = findProject(projectSeq);
         // 프로젝트 찾은 번호로 받은 프로젝트명으로 변경
         Project project = projectFind.toBuilder().proSeq(projectSeq).proName(projectName).build();
         // 수정
@@ -136,11 +136,11 @@ public class ProjectServiceImpl implements ProjectService {
      */
     @Override
     @Transactional
-    public void projectDelete(List<Long> projectSeq) {
+    public void deleteProject(List<Long> projectSeq) {
         // 리스트로 받은 프로젝트 번호를 조회
         try {
             for (int i = 0; i < projectSeq.size(); i++) {
-                Project projectFind = projectFind(projectSeq.get(i));
+                Project projectFind = findProject(projectSeq.get(i));
                 // 프로젝트들의 상태를 N으로 변경
                 Project project =
                         projectFind.toBuilder().proSeq(projectSeq.get(i)).proActivate('N').build();
@@ -161,10 +161,10 @@ public class ProjectServiceImpl implements ProjectService {
      * @return
      */
     @Override
-    public boolean projectCheck(Long memberSeq, Long projectSeq) {
+    public boolean checkProject(Long memberSeq, Long projectSeq) {
         log.info(
                 "[projectService] projectcheck - memberSeq,  projectSeq : {} | {}", memberSeq, projectSeq);
-        Project project = projectFind(projectSeq);
+        Project project = findProject(projectSeq);
         log.info("[projectService] projectcheck - project : {} ", project.toString());
         Long seq = project.getMember().getSeq();
         log.info("[projectService] projectcheck - seq : {} ", seq);
@@ -182,13 +182,13 @@ public class ProjectServiceImpl implements ProjectService {
      * @return
      */
     @Override
-    public boolean projectCheck(Long memberSeq, List<Long> projectSeq) {
+    public boolean checkProject(Long memberSeq, List<Long> projectSeq) {
         log.info(
                 "[projectService] projectCheck - memberSeq, projectSeq : {} , {} ",
                 memberSeq,
                 projectSeq.toString());
         for (Long pro : projectSeq) {
-            boolean b = projectCheck(memberSeq, pro);
+            boolean b = checkProject(memberSeq, pro);
             log.info("[projectService] projectCheck - boolean : {} ", b);
         }
         return true;
@@ -201,19 +201,19 @@ public class ProjectServiceImpl implements ProjectService {
         }
     }
 
-    private Project projectFind(Long seq) {
+    private Project findProject(Long seq) {
         return projectRepository
                 .findById(seq)
                 .orElseThrow(() -> new ProjectNotFoundException("project not found"));
     }
 
-    private Member memberFind(Long seq) {
+    private Member findMember(Long seq) {
         return memberRepository
                 .findById(seq)
                 .orElseThrow(() -> new MemberNotFoundException("Member not found"));
     }
 
-    private void memberSeqCheck(Long seq) {
+    private void checkMemberSeq(Long seq) {
         if (seq == null) {
             throw new MemberNotFoundException();
         }

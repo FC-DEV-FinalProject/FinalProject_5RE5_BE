@@ -526,7 +526,7 @@ public class VcServiceImpl implements VcService {
         // 행에서 프로젝트 찾기
         Project proSeq = vcSrcFile.getVc().getProSeq();
         // 프로젝트에서 회원정보로 회원확인
-        if (projectService.projectCheck(memberSeq, proSeq.getProSeq())) {
+        if (projectService.checkProject(memberSeq, proSeq.getProSeq())) {
             return true;
         }
         throw new VcNotMemberException();

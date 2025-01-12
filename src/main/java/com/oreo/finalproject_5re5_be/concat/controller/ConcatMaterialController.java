@@ -41,7 +41,7 @@ public class ConcatMaterialController {
     public ResponseEntity<ResponseDto<ConcatResultResponse>> getAllMaterialsByResultSeq(
             @RequestParam("concatresultseq") Long concatResultSeq,
             @AuthenticationPrincipal CustomUserDetails userDetails) {
-        projectService.projectCheck(userDetails.getMember().getSeq(), concatResultSeq);
+        projectService.checkProject(userDetails.getMember().getSeq(), concatResultSeq);
 
         // ConcatResult에서 결과 파일 URL 조회
         String resultAudioUrl =
@@ -85,7 +85,7 @@ public class ConcatMaterialController {
     public ResponseEntity<ResponseDto<ConcatRowListDto>> getMaterialRowListByResultSeq(
             @NotNull @RequestParam("concatresultseq") Long concatResultSeq,
             @AuthenticationPrincipal CustomUserDetails userDetails) {
-        projectService.projectCheck(userDetails.getMember().getSeq(), concatResultSeq);
+        projectService.checkProject(userDetails.getMember().getSeq(), concatResultSeq);
 
         // resultSeq로 재료가 된 concatRowList 얻어오기
         List<ConcatRow> materialConcatRowList =

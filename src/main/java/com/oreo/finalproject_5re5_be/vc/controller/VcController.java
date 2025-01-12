@@ -70,7 +70,7 @@ public class VcController {
             @Valid @RequestParam List<MultipartFile> file,
             HttpSession session) {
         // 회원의 정보인지 확인
-        projectService.projectCheck((Long) session.getAttribute("memberSeq"), proSeq);
+        projectService.checkProject((Long) session.getAttribute("memberSeq"), proSeq);
         try {
             // 저장을 위한 파일 정보로 객체 생성
             return ResponseEntity.ok()
@@ -104,7 +104,7 @@ public class VcController {
             @RequestParam MultipartFile file,
             HttpSession session) {
         // 회원의 정보인지 확인
-        projectService.projectCheck((Long) session.getAttribute("memberSeq"), proSeq);
+        projectService.checkProject((Long) session.getAttribute("memberSeq"), proSeq);
         try {
             // 들어온 파일을 검사해서 확장자, 길이, 이름, 크기를 추출 + 파일을 S3에 업로드
             // DB에 저장할 객체 생성 + 저장
@@ -249,7 +249,7 @@ public class VcController {
                 (Long) session.getAttribute("memberSeq"));
         // 회원의 정보인지 확인
         boolean memberSeq =
-                projectService.projectCheck((Long) session.getAttribute("memberSeq"), proSeq);
+                projectService.checkProject((Long) session.getAttribute("memberSeq"), proSeq);
         log.info("[VcController] vc 조회 - memberSeq boolean : {} ", memberSeq);
         // Project 의 src, result, text 정보 추출
         List<VcResponse> vcResponse = vcService.getVcResponse(proSeq);

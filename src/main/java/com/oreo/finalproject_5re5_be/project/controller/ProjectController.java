@@ -39,8 +39,8 @@ public class ProjectController {
         //            @PathVariable Long memSeq){//session memberSeq값
         //        List<ProjectResponse> projectResponses =
         Long memberSeq = (Long) session.getAttribute("memberSeq");
-        projectService.projectFindAll(memberSeq);
-        List<ProjectResponse> projectResponses = projectService.projectFindAll(memberSeq);
+        projectService.findAllProject(memberSeq);
+        List<ProjectResponse> projectResponses = projectService.findAllProject(memberSeq);
         log.info(
                 "[ProjectController] projectGet - projectResponses : {} ", projectResponses.toString());
 
@@ -54,7 +54,7 @@ public class ProjectController {
     public ResponseEntity<ResponseDto<Map<String, Object>>> projectSave(
             HttpSession session) { // session memberSeq값
         // project 생성
-        Long projectSeq = projectService.projectSave((Long) session.getAttribute("memberSeq"));
+        Long projectSeq = projectService.saveProject((Long) session.getAttribute("memberSeq"));
         Map<String, Object> map = new HashMap<>();
         map.put("projectSeq", projectSeq); // 프로젝트seq 응답에 추가
         map.put("msg", "프로젝트 생성 완료되었습니다."); // 메시지 추가
@@ -65,9 +65,9 @@ public class ProjectController {
     @PutMapping("")
     public ResponseEntity<ResponseDto<String>> projectUpdate(
             HttpSession session, @Valid @RequestBody ProjectTextRequest request) {
-        projectService.projectCheck(
+        projectService.checkProject(
                 (Long) session.getAttribute("memberSeq"), request.getProSeq()); // 회원의 프로젝트인지 확인
-        projectService.projectUpdate(request.getProSeq(), request.getProjectName()); // 프로젝트 수정
+        projectService.updateProject(request.getProSeq(), request.getProjectName()); // 프로젝트 수정
         return ResponseEntity.ok()
                 .body(new ResponseDto<>(HttpStatus.OK.value(), "Project 이름 변경 완료되었습니다.")); // 응답
     }
@@ -76,8 +76,8 @@ public class ProjectController {
     @DeleteMapping("")
     public ResponseEntity<ResponseDto<String>> projectDelete(
             @RequestParam List<Long> proSeq, HttpSession session) {
-        projectService.projectCheck((Long) session.getAttribute("memberSeq"), proSeq); // 회원의 프로젝트인지 확인
-        projectService.projectDelete(proSeq); // 프로젝트 삭제 배열로 받음
+        projectService.checkProject((Long) session.getAttribute("memberSeq"), proSeq); // 회원의 프로젝트인지 확인
+        projectService.deleteProject(proSeq); // 프로젝트 삭제 배열로 받음
         return ResponseEntity.ok()
                 .body(new ResponseDto<>(HttpStatus.OK.value(), "Project 삭제 완료되었습니다.")); // 모두 삭제
     }

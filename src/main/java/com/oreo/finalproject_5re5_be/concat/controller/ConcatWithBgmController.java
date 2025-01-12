@@ -88,7 +88,7 @@ public class ConcatWithBgmController {
 
             log.info("concatTab:{}", concatTabSeq);
 
-            projectService.projectCheck(
+            projectService.checkProject(
                     customUserDetails.getMember().getSeq(), requestDto.getConcatTab().getTabId());
 
             IntervalConcatenator intervalConcatenator =
