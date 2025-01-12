@@ -17,6 +17,9 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
@@ -105,7 +108,7 @@ public class ProjectServiceImpl implements ProjectService {
             log.info("Save project : {}", save);
             // 생성된 프로젝트 ID 정보 추출
             return save.getProSeq();
-        } catch (Exception e) {
+        } catch (DataAccessException e) {
             log.error("Error Save project 저장중 오류 : {} ", e.getMessage(), e);
             throw new RuntimeException("Project 저장 중 오류가 발생하였습니다.");
         }
@@ -126,7 +129,13 @@ public class ProjectServiceImpl implements ProjectService {
         // 프로젝트 찾은 번호로 받은 프로젝트명으로 변경
         Project project = projectFind.toBuilder().proSeq(projectSeq).proName(projectName).build();
         // 수정
-        projectRepository.save(project);
+        try{
+            projectRepository.save(project);
+        }catch (DataAccessException e){
+            log.error("Error update Porject 프로젝트 이름 수정 오류: {} ", e.getMessage(), e);
+            throw new RuntimeException("Porject 이름 수정 중 오류가 발생하였습니다.");
+        }
+
     }
 
     /**
@@ -135,6 +144,10 @@ public class ProjectServiceImpl implements ProjectService {
      * @param projectSeq
      */
     @Override
+    @Retryable(
+            value = {DataAccessException .class},
+            maxAttempts = 3,
+            backoff = @Backoff(delay = 2000))
     @Transactional
     public void deleteProject(List<Long> projectSeq) {
         // 리스트로 받은 프로젝트 번호를 조회
@@ -147,7 +160,7 @@ public class ProjectServiceImpl implements ProjectService {
                 // 저장
                 projectRepository.save(project);
             }
-        } catch (Exception e) {
+        } catch (DataAccessException e) {
             log.error("Error Save Porject 삭제(수정) 오류: {} ", e.getMessage(), e);
             throw new RuntimeException("Porject 삭제(수정) 중 오류가 발생하였습니다.");
         }
