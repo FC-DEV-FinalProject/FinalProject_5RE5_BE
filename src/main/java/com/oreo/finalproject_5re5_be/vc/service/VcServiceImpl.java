@@ -47,6 +47,7 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
@@ -121,9 +122,9 @@ public class VcServiceImpl implements VcService {
                                     vcSrcRequest.getExtension())); // SRC 객체 저장
 
             return VcUrlResponse.of(save.getSrcSeq(), save.getFileUrl());
-        } catch (Exception e) {
+        } catch (DataAccessException e) {
             log.error("Error Save SRC 저장중 오류: {} ", e.getMessage(), e);
-            throw e;
+            throw new RuntimeException("SRC 파일 저장 중 DB 오류가 발생하였습니다.", e);
         }
     }
 
@@ -136,7 +137,7 @@ public class VcServiceImpl implements VcService {
             return vcSrcRequests.stream()
                     .map(vcSrcRequest -> saveSrc(vcSrcRequest, proSeq))
                     .collect(Collectors.toList());
-        } catch (Exception e) {
+        } catch (DataAccessException e) {
             log.error("Error Save SRC 들 저장중 오류  : {} ", e.getMessage(), e);
             throw new RuntimeException("SRC 파일 저장 중 오류가 발생하였습니다.");
         }
@@ -170,7 +171,7 @@ public class VcServiceImpl implements VcService {
                                     vcAudioRequest.getSize(),
                                     vcAudioRequest.getExtension())); // TRG 객체 저장
             return VcUrlResponse.of(save.getTrgSeq(), save.getFileUrl());
-        } catch (Exception e) {
+        } catch (DataAccessException e) {
             log.error("Error Save TRG  저장중 오류  : {} ", e.getMessage(), e);
             throw new RuntimeException("TRG 파일 저장 중 오류가 발생하였습니다.");
         }
@@ -203,7 +204,7 @@ public class VcServiceImpl implements VcService {
                                     vcAudioRequest.getSize(),
                                     vcAudioRequest.getExtension())); // result 객체 저장
             return VcUrlResponse.of(save.getResSeq(), save.getFileUrl());
-        } catch (Exception e) {
+        } catch (DataAccessException e) {
             log.error("Error Save Result  저장중 오류  : {} ", e.getMessage(), e);
             throw new RuntimeException("Result 파일 저장 중 오류가 발생하였습니다.");
         }
@@ -215,7 +216,7 @@ public class VcServiceImpl implements VcService {
         // vcAudioRequests를 위에 resultSave를 적용
         try {
             return vcAudioRequests.stream().map(this::saveResult).collect(Collectors.toList());
-        } catch (Exception e) {
+        } catch (DataAccessException e) {
             log.error("Error Save Result들 저장중 오류  : {} ", e.getMessage(), e);
             throw new RuntimeException("Result 파일들 저장 중 오류가 발생하였습니다.");
         }
@@ -245,7 +246,7 @@ public class VcServiceImpl implements VcService {
                                     vcTextRequest.getText(),
                                     String.valueOf(vcTextRequest.getText().length()))); // Text 객체 저장
             return VcTextResponse.of(save.getVtSeq(), save.getComment());
-        } catch (Exception e) {
+        } catch (DataAccessException e) {
             log.error("Error Save Text 저장중 오류  : {} ", e.getMessage(), e);
             throw new RuntimeException("Text 저장 중 오류가 발생하였습니다.");
         }
@@ -263,7 +264,7 @@ public class VcServiceImpl implements VcService {
         // vcTextRequest를 가지고 위에 textSave에 적용
         try {
             return vcTextRequests.stream().map(this::saveText).collect(Collectors.toList());
-        } catch (Exception e) {
+        } catch (DataAccessException e) {
             log.error("Error Save Text 저장중 오류  : {} ", e.getMessage(), e);
             throw new RuntimeException("Text 저장 중 오류가 발생하였습니다.");
         }
@@ -526,16 +527,11 @@ public class VcServiceImpl implements VcService {
     @Override
     @Transactional(readOnly = true)
     public MultipartFile getTrgFile(Long trgSeq) throws IOException {
-        try {
-            MultipartFile multipartFile =
-                    AudioFileTypeConverter.convertFileToMultipartFile(
-                            s3Service.downloadFile(
-                                    "vc/trg/" + extractFileName(requestVcTrgUrl(trgSeq).getUrl())));
-            log.info("[vcService] getTrgFile multipartFile 확인 : {} ", multipartFile);
-            return multipartFile;
-        } catch (Exception e) {
-            throw new IOException("TRG File 오류", e);
-        }
+        MultipartFile multipartFile =
+                AudioFileTypeConverter.convertFileToMultipartFile(
+                        s3Service.downloadFile("vc/trg/" + extractFileName(requestVcTrgUrl(trgSeq).getUrl())));
+        log.info("[vcService] getTrgFile multipartFile 확인 : {} ", multipartFile);
+        return multipartFile;
     }
 
     @Override
