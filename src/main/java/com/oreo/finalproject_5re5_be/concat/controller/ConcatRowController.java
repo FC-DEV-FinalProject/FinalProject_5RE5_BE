@@ -31,7 +31,7 @@ public class ConcatRowController {
             @RequestBody ConcatRowSaveRequestDto concatRowSaveRequestDto,
             @AuthenticationPrincipal CustomUserDetails customUserDetails)
             throws IOException {
-        projectService.projectCheck(
+        projectService.checkProject(
                 customUserDetails.getMember().getSeq(), concatRowSaveRequestDto.getConcatTabId());
 
         return new ResponseDto<>(
@@ -44,7 +44,7 @@ public class ConcatRowController {
     public ResponseEntity<ResponseDto<Boolean>> disable(
             @RequestParam List<Long> rowSeq,
             @AuthenticationPrincipal CustomUserDetails customUserDetails) {
-        projectService.projectCheck(
+        projectService.checkProject(
                 customUserDetails.getMember().getSeq(),
                 concatRowService.readConcatRow(rowSeq.get(0)).getConcatTab().getProjectId());
 
@@ -57,7 +57,7 @@ public class ConcatRowController {
     public ResponseEntity<ResponseDto<List<ConcatRowDto>>> readOne(
             @RequestParam Long concatRowSequence,
             @AuthenticationPrincipal CustomUserDetails customUserDetails) {
-        projectService.projectCheck(
+        projectService.checkProject(
                 customUserDetails.getMember().getSeq(),
                 concatRowService.readConcatRow(concatRowSequence).getConcatTab().getProjectId());
 
@@ -72,7 +72,7 @@ public class ConcatRowController {
     public ResponseEntity<ResponseDto<List<ConcatRowDto>>> readRecent(
             @RequestParam Long projectSequence,
             @AuthenticationPrincipal CustomUserDetails customUserDetails) {
-        projectService.projectCheck(customUserDetails.getMember().getSeq(), projectSequence);
+        projectService.checkProject(customUserDetails.getMember().getSeq(), projectSequence);
 
         // 사용자 예외 처리
         return new ResponseDto<>(
@@ -85,7 +85,7 @@ public class ConcatRowController {
     public ResponseEntity<ResponseDto<Boolean>> update(
             @RequestBody ConcatRowSaveRequestDto concatRowSaveRequestDto,
             @AuthenticationPrincipal CustomUserDetails customUserDetails) {
-        projectService.projectCheck(
+        projectService.checkProject(
                 customUserDetails.getMember().getSeq(), concatRowSaveRequestDto.getConcatTabId());
 
         return new ResponseDto<>(

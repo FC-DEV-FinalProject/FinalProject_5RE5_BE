@@ -327,7 +327,7 @@ public class TtsSentenceServiceImpl implements TtsSentenceService {
         }
 
         // 4. member 가 소유한 프로젝트인지 확인
-        return projectService.projectCheck(memberSeq, projectSeq);
+        return projectService.checkProject(memberSeq, projectSeq);
     }
 
     @Override

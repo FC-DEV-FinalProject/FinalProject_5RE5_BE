@@ -9,15 +9,15 @@ import org.springframework.validation.annotation.Validated;
 @Validated
 public interface ProjectService {
     /** 1. 프로젝트 조회 2. 프로젝트 생성 3. 프로젝트 이름 변경 4. 프로젝트 삭제 */
-    List<ProjectResponse> projectFindAll(Long memberSeq);
+    List<ProjectResponse> findAllProject(Long memberSeq);
 
-    Long projectSave(Long memberSeq);
+    Long saveProject(Long memberSeq);
 
-    void projectUpdate(@Valid @NotNull Long projectSeq, @Valid @NotNull String projectName);
+    void updateProject(@Valid @NotNull Long projectSeq, @Valid @NotNull String projectName);
 
-    void projectDelete(@Valid @NotNull List<Long> projectSeq);
+    void deleteProject(@Valid @NotNull List<Long> projectSeq);
 
-    boolean projectCheck(Long memberSeq, Long projectSeq);
+    boolean checkProject(Long memberSeq, Long projectSeq);
 
-    boolean projectCheck(Long memberSeq, List<Long> projectSeq);
+    boolean checkProject(Long memberSeq, List<Long> projectSeq);
 }

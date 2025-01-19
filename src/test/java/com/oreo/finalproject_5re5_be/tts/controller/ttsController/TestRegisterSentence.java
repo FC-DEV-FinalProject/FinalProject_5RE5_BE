@@ -118,7 +118,7 @@ class TestRegisterSentence {
             any(TtsSentenceRequest.class))).thenReturn(response); // 응답 객체 반환
 
         // projectService.projectCheck 메서드가 호출되면 true 반환
-        when(projectService.projectCheck(1L, 1L)).thenReturn(true);
+        when(projectService.checkProject(1L, 1L)).thenReturn(true);
 
         // mockHttpSession 생성
         MockHttpSession mockHttpSession = new MockHttpSession();
@@ -162,7 +162,7 @@ class TestRegisterSentence {
         // when
         // 2. mock 객체 설정
         // projectService.projectCheck 메서드가 호출되면 true 반환
-        when(projectService.projectCheck(1L, 1L)).thenReturn(true);
+        when(projectService.checkProject(1L, 1L)).thenReturn(true);
 
         // mockHttpSession 생성
         MockHttpSession mockHttpSession = new MockHttpSession();
@@ -200,7 +200,7 @@ class TestRegisterSentence {
         // When
         // 2. mock 객체 설정
         // projectService.projectCheck 메서드가 호출되면 true 반환
-        when(projectService.projectCheck(1L, 1L)).thenReturn(true);
+        when(projectService.checkProject(1L, 1L)).thenReturn(true);
 
         // mockHttpSession 생성
         MockHttpSession mockHttpSession = new MockHttpSession();
@@ -239,7 +239,7 @@ class TestRegisterSentence {
             new IllegalArgumentException("projectSeq is invalid"));
 
         // projectService.projectCheck 메서드가 호출되면 true 반환
-        when(projectService.projectCheck(1L, 1L)).thenReturn(true);
+        when(projectService.checkProject(1L, 1L)).thenReturn(true);
 
         // mockHttpSession 생성
         MockHttpSession mockHttpSession = new MockHttpSession();
@@ -276,7 +276,7 @@ class TestRegisterSentence {
             any(TtsSentenceRequest.class))).thenThrow(new EntityNotFoundException());
 
         // projectService.projectCheck 메서드가 호출되면 true 반환
-        when(projectService.projectCheck(1L, 1L)).thenReturn(true);
+        when(projectService.checkProject(1L, 1L)).thenReturn(true);
 
         // mockHttpSession 생성
         MockHttpSession mockHttpSession = new MockHttpSession();
@@ -319,7 +319,7 @@ class TestRegisterSentence {
         // When
         // 2. mock 객체 설정
         // projectService.projectCheck 메서드가 호출되면 true 반환
-        when(projectService.projectCheck(1L, 1L)).thenReturn(true);
+        when(projectService.checkProject(1L, 1L)).thenReturn(true);
 
         // mockHttpSession 생성
         MockHttpSession mockHttpSession = new MockHttpSession();
@@ -351,7 +351,7 @@ class TestRegisterSentence {
             any(TtsSentenceRequest.class))).thenThrow(new RuntimeException("Unexpected error"));
 
         // projectService.projectCheck 메서드가 호출되면 true 반환
-        when(projectService.projectCheck(1L, 1L)).thenReturn(true);
+        when(projectService.checkProject(1L, 1L)).thenReturn(true);
 
         // mockHttpSession 생성
         MockHttpSession mockHttpSession = new MockHttpSession();

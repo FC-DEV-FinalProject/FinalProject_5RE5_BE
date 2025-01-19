@@ -72,7 +72,7 @@ public class AudioFileController {
         concatRowSeq.forEach(
                 seq -> {
                     Long projectId = concatRowService.readConcatRow(seq).getConcatTab().getProjectId();
-                    projectService.projectCheck(userDetails.getMember().getSeq(), projectId);
+                    projectService.checkProject(userDetails.getMember().getSeq(), projectId);
                 });
 
         concatRowSeq.sort(Long::compareTo);

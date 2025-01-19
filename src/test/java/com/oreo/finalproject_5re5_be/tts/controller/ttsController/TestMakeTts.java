@@ -69,7 +69,7 @@ class TestMakeTts {
         Mockito.when(ttsMakeService.makeTts(eq(tsSeq))).thenReturn(response); // 응답 객체 반환
 
         // 3.1 회원 조회에 관한 모의 동작 설정
-        Mockito.when(projectService.projectCheck(eq(projectSeq), anyLong())).thenReturn(true);
+        Mockito.when(projectService.checkProject(eq(projectSeq), anyLong())).thenReturn(true);
 
         // 3.2 mock
         MockHttpSession session = new MockHttpSession();
@@ -102,7 +102,7 @@ class TestMakeTts {
                 .thenThrow(new EntityNotFoundException(errorMassage));
 
         // 3.1 회원 조회에 관한 모의 동작 설정
-        Mockito.when(projectService.projectCheck(eq(projectSeq), anyLong())).thenReturn(true);
+        Mockito.when(projectService.checkProject(eq(projectSeq), anyLong())).thenReturn(true);
 
         // 3.2 mock session 설정
         MockHttpSession session = new MockHttpSession();
@@ -131,7 +131,7 @@ class TestMakeTts {
 
         // 모의 동작 설정
         // 2.1 회원 조회에 관한 모의 동작 설정
-        Mockito.when(projectService.projectCheck(eq(projectSeq), anyLong())).thenReturn(true);
+        Mockito.when(projectService.checkProject(eq(projectSeq), anyLong())).thenReturn(true);
 
         // 2.2 mock session 설정
         MockHttpSession session = new MockHttpSession();

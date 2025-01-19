@@ -37,6 +37,8 @@ public enum ErrorCode {
 
     // 프로젝트 ERROR 처리
     PROJECT_NOT_FOUND_ERROR(404, "해당 프로젝트를 찾을 수 없습니다."),
+    PROJECT_INVALID_NAME(400, "헤당 프로젝트 이름이 허용되지 않습니다."),
+    PROJECT_ACCESS_DENIED(403, "해당 프로젝트는 회원의 프로젝트가 아닙니다."),
 
     // TTS ERROR 처리
     PROJECT_MISMATCH_ERROR(400, "요청하신 프로젝트를 소유하고 있지 않습니다."),
