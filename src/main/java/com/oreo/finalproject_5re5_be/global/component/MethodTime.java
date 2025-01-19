@@ -1,6 +1,5 @@
 package com.oreo.finalproject_5re5_be.global.component;
 
-import com.oreo.finalproject_5re5_be.global.exception.MethodTimeException;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -21,19 +20,20 @@ public class MethodTime {
                     + "execution(* com.oreo.finalproject_5re5_be.tts.controller.*.*(..)) || "
                     + "execution(* com.oreo.finalproject_5re5_be.vc.controller.*.*(..)) || "
                     + "execution(* com.oreo.finalproject_5re5_be.project.controller.*.*(..))")
-    public Object executionAspect(ProceedingJoinPoint joinPoint) throws Throwable {
+    public Object executionAspect(ProceedingJoinPoint joinPoint) {
         StopWatch stopWatch = new StopWatch();
-        stopWatch.start();
-
         try {
+            stopWatch.start();
+
             return joinPoint.proceed();
-        } catch (Exception e) {
+        } catch (Throwable e) {
             log.error(
                     "Exception in method [{}]: {}",
                     joinPoint.getSignature().toShortString(),
                     e.getMessage(),
                     e);
-            throw new MethodTimeException("AOP 처리 중 예외 발생: " + joinPoint.getSignature().toShortString());
+            throw new RuntimeException(
+                    "AOP 시간 측정 처리 중 예외 발생: " + joinPoint.getSignature().toShortString(), e);
         } finally {
             stopWatch.stop();
             log.info(

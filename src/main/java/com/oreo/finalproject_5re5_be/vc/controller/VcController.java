@@ -78,8 +78,8 @@ public class VcController {
                             new ResponseDto<>(
                                     HttpStatus.OK.value(),
                                     mapCreate(
-                                            vcService.srcSave(
-                                                    vcService.vcSrcRequestBuilder(
+                                            vcService.saveSrc(
+                                                    vcService.requestBuilderVcSrc(
                                                             audioInfo.extractAudioFileInfo(file),
                                                             s3Service.upload(file, "vc/src"),
                                                             proSeq),
@@ -113,8 +113,8 @@ public class VcController {
                             new ResponseDto<>(
                                     HttpStatus.OK.value(),
                                     mapCreate(
-                                            vcService.trgSave(
-                                                    vcService.audioRequestBuilder(
+                                            vcService.saveTrg(
+                                                    vcService.requestBuilderAudio(
                                                             proSeq,
                                                             audioInfo.extractAudioFileInfo(file),
                                                             s3Service.upload(file, "vc/trg"))),
@@ -138,7 +138,7 @@ public class VcController {
             HttpSession session)
             throws IOException {
         // 회원의 정보인지 확인
-        vcService.srcCheck((Long) session.getAttribute("memberSeq"), srcSeq);
+        vcService.checkSrc((Long) session.getAttribute("memberSeq"), srcSeq);
         // 결과 파일 생성(VC API)
         List<MultipartFile> resultFile =
                 vcApiService.resultFileCreate(
@@ -158,9 +158,9 @@ public class VcController {
                         new ResponseDto<>(
                                 HttpStatus.OK.value(),
                                 mapCreate(
-                                        vcService.resultSave(
-                                                vcService.audioRequestBuilder(
-                                                        vcService.vcSrcUrlRequests(srcSeq),
+                                        vcService.saveResult(
+                                                vcService.requestBuilderAudio(
+                                                        vcService.requestsVcSrcUrl(srcSeq),
                                                         audioInfo.extractAudioFileInfo(resultFile),
                                                         s3Service.upload(resultFile, "vc/result"))),
                                         "result 파일 저장이 완료되었습니다.")));
@@ -173,7 +173,7 @@ public class VcController {
             HttpSession session) {
         // 회원의 정보인지 확인
         for (VcTextRequest vc : vcText) {
-            vcService.srcCheck((Long) session.getAttribute("memberSeq"), vc.getSeq());
+            vcService.checkSrc((Long) session.getAttribute("memberSeq"), vc.getSeq());
         }
 
         try {
@@ -183,7 +183,7 @@ public class VcController {
                             new ResponseDto<>(
                                     HttpStatus.OK.value(),
                                     mapCreate(
-                                            vcService.textSave(vcService.vcTextResponses(vcText)), "text 저장 완료되었습니다.")));
+                                            vcService.saveText(vcService.responsesVcText(vcText)), "text 저장 완료되었습니다.")));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(
@@ -198,7 +198,7 @@ public class VcController {
     public ResponseEntity<ResponseDto<Map<String, Object>>> srcURL(
             @Valid @PathVariable Long srcSeq, HttpSession session) {
         // 회원의 정보인지 확인
-        vcService.srcCheck((Long) session.getAttribute("memberSeq"), srcSeq);
+        vcService.checkSrc((Long) session.getAttribute("memberSeq"), srcSeq);
         try {
             // SRCFile URL 호출
             return ResponseEntity.ok()
@@ -221,7 +221,7 @@ public class VcController {
     public ResponseEntity<ResponseDto<Map<String, Object>>> resultURL(
             @Valid @PathVariable Long resSeq, HttpSession session) {
         // 회원의 정보인지 확인
-        vcService.resCheck((Long) session.getAttribute("memberSeq"), resSeq);
+        vcService.checkRes((Long) session.getAttribute("memberSeq"), resSeq);
         // Result Seq 로 URL 정보 추출
         try {
             return ResponseEntity.ok()
@@ -275,7 +275,7 @@ public class VcController {
             @Valid @RequestParam @Parameter(description = "List<Long> srcSeq") List<Long> srcSeq,
             HttpSession session) {
         // 회원의 정보인지 확인
-        vcService.srcCheck((Long) session.getAttribute("memberSeq"), srcSeq);
+        vcService.checkSrc((Long) session.getAttribute("memberSeq"), srcSeq);
         // 삭제 호출
         try {
             return ResponseEntity.ok()
@@ -299,7 +299,7 @@ public class VcController {
             @Valid @RequestParam("text") String text,
             HttpSession session) {
         // 회원의 정보인지 확인
-        vcService.textCheck((Long) session.getAttribute("memberSeq"), textSeq);
+        vcService.checkText((Long) session.getAttribute("memberSeq"), textSeq);
         // textseq 로 text 값 변경
         try {
             return ResponseEntity.ok()
@@ -322,7 +322,7 @@ public class VcController {
             @Valid @RequestBody List<VcRowRequest> rows, HttpSession session) {
         // 회원의 정보인지 확인
         for (VcRowRequest row : rows) {
-            vcService.srcCheck((Long) session.getAttribute("memberSeq"), row.getSeq());
+            vcService.checkSrc((Long) session.getAttribute("memberSeq"), row.getSeq());
         }
         // VC 행 순서 수정
         try {

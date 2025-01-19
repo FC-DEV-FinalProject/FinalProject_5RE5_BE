@@ -79,7 +79,7 @@ class VcServiceImplTest {
 
         when(vcSrcFileRepository.save(any(VcSrcFile.class))).thenReturn(srcfile);
 
-        VcUrlResponse response = vcService.srcSave(request, project.getProSeq());
+        VcUrlResponse response = vcService.saveSrc(request, project.getProSeq());
 
         verify(vcSrcFileRepository, times(1)).save(any(VcSrcFile.class));
         assertNotNull(response);
@@ -108,7 +108,7 @@ class VcServiceImplTest {
         when(vcRepository.findById(request.getSeq())).thenReturn(Optional.of(vc)); // 프로젝트 조회 값 설정
 
         when(vcTrgFileRepository.save(any(VcTrgFile.class))).thenReturn(trgFile);
-        VcUrlResponse response = vcService.trgSave(request); // Trg 저장
+        VcUrlResponse response = vcService.saveTrg(request); // Trg 저장
 
         verify(vcTrgFileRepository, times(1)).save(any(VcTrgFile.class)); // 저장 확인
         assertNotNull(response);
@@ -137,7 +137,7 @@ class VcServiceImplTest {
                 .thenReturn(Optional.of(srcFile)); // SRC 조회 값 설정
 
         when(vcResultFileRepository.save(any(VcResultFile.class))).thenReturn(resultFile);
-        VcUrlResponse response = vcService.resultSave(request); // result 저장
+        VcUrlResponse response = vcService.saveResult(request); // result 저장
 
         verify(vcResultFileRepository, times(1)).save(any(VcResultFile.class)); // 저장 확인
         assertNotNull(response);
@@ -159,7 +159,7 @@ class VcServiceImplTest {
                 .thenReturn(Optional.of(srcFile)); // src 조회 값 설정
 
         when(vcTextRepository.save(any(VcText.class))).thenReturn(vcText);
-        VcTextResponse vcTextResponse = vcService.textSave(request); // text 저장
+        VcTextResponse vcTextResponse = vcService.saveText(request); // text 저장
 
         verify(vcTextRepository, times(1)).save(any(VcText.class)); // 저장 확인
         assertNotNull(vcTextResponse);
