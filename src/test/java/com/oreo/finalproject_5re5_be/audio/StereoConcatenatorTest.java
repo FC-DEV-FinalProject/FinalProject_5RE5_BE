@@ -27,12 +27,12 @@ class StereoConcatenatorTest {
         AudioResample audioResample =
                 new AudioResample(AudioFormats.STEREO_FORMAT_SR441_B16); // 스테레오 포맷
         // 오디오 파일 불러오기
-        File inputFile = new File("test.mp3");
+        File inputFile = new File("aduio/test.mp3");
         byte[] bytes = AudioExtensionConverter.mp3ToWav(inputFile);
         ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes);
         AudioInputStream inputAIS = AudioSystem.getAudioInputStream(byteArrayInputStream);
 
-        File inputFile2 = new File("ttsoutput.mp3");
+        File inputFile2 = new File("aduio/ttsoutput.mp3");
         byte[] bytes2 = AudioExtensionConverter.mp3ToWav(inputFile2);
         ByteArrayInputStream byteArrayInputStream2 = new ByteArrayInputStream(bytes2);
         AudioInputStream inputAIS2 = AudioSystem.getAudioInputStream(byteArrayInputStream2);
@@ -54,12 +54,12 @@ class StereoConcatenatorTest {
         AudioResample audioResample =
                 new AudioResample(AudioFormats.STEREO_FORMAT_SR441_B32); // 스테레오 포맷
         // 오디오 파일 불러오기
-        File inputFile = new File("test.mp3");
+        File inputFile = new File("aduio/test.mp3");
         byte[] bytes = AudioExtensionConverter.mp3ToWav(inputFile);
         ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes);
         AudioInputStream inputAIS = AudioSystem.getAudioInputStream(byteArrayInputStream);
 
-        File inputFile2 = new File("ttsoutput.mp3");
+        File inputFile2 = new File("aduio/ttsoutput.mp3");
         byte[] bytes2 = AudioExtensionConverter.mp3ToWav(inputFile2);
         ByteArrayInputStream byteArrayInputStream2 = new ByteArrayInputStream(bytes2);
         AudioInputStream inputAIS2 = AudioSystem.getAudioInputStream(byteArrayInputStream2);
@@ -81,12 +81,12 @@ class StereoConcatenatorTest {
         AudioResample audioResample =
                 new AudioResample(AudioFormats.STEREO_FORMAT_SR240_B32); // 스테레오 포맷
         // 오디오 파일 불러오기
-        File inputFile = new File("test.mp3");
+        File inputFile = new File("aduio/test.mp3");
         byte[] bytes = AudioExtensionConverter.mp3ToWav(inputFile);
         ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes);
         AudioInputStream inputAIS = AudioSystem.getAudioInputStream(byteArrayInputStream);
 
-        File inputFile2 = new File("ttsoutput.mp3");
+        File inputFile2 = new File("aduio/ttsoutput.mp3");
         byte[] bytes2 = AudioExtensionConverter.mp3ToWav(inputFile2);
         ByteArrayInputStream byteArrayInputStream2 = new ByteArrayInputStream(bytes2);
         AudioInputStream inputAIS2 = AudioSystem.getAudioInputStream(byteArrayInputStream2);
@@ -108,12 +108,12 @@ class StereoConcatenatorTest {
         AudioResample audioResample =
                 new AudioResample(AudioFormats.STEREO_FORMAT_SR240_B16); // 스테레오 포맷
         // 오디오 파일 불러오기
-        File inputFile = new File("test.mp3");
+        File inputFile = new File("aduio/test.mp3");
         byte[] bytes = AudioExtensionConverter.mp3ToWav(inputFile);
         ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes);
         AudioInputStream inputAIS = AudioSystem.getAudioInputStream(byteArrayInputStream);
 
-        File inputFile2 = new File("ttsoutput.mp3");
+        File inputFile2 = new File("aduio/ttsoutput.mp3");
         byte[] bytes2 = AudioExtensionConverter.mp3ToWav(inputFile2);
         ByteArrayInputStream byteArrayInputStream2 = new ByteArrayInputStream(bytes2);
         AudioInputStream inputAIS2 = AudioSystem.getAudioInputStream(byteArrayInputStream2);
@@ -135,12 +135,12 @@ class StereoConcatenatorTest {
         AudioResample audioResample = new AudioResample(AudioFormats.MONO_FORMAT_SR441_B16);
 
         // 오디오 파일 불러오기
-        File inputFile = new File("test.mp3");
+        File inputFile = new File("aduio/test.mp3");
         byte[] bytes = AudioExtensionConverter.mp3ToWav(inputFile);
         ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes);
         AudioInputStream inputAIS = AudioSystem.getAudioInputStream(byteArrayInputStream);
 
-        File inputFile2 = new File("ttsoutput.mp3");
+        File inputFile2 = new File("aduio/ttsoutput.mp3");
         byte[] bytes2 = AudioExtensionConverter.mp3ToWav(inputFile2);
         ByteArrayInputStream byteArrayInputStream2 = new ByteArrayInputStream(bytes2);
         AudioInputStream inputAIS2 = AudioSystem.getAudioInputStream(byteArrayInputStream2);

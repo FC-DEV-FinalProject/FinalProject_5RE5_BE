@@ -49,7 +49,7 @@ class AudioResampleTest {
     @DisplayName("모노 리샘플링 개별 성공 테스트")
     void resampleMonoPartSuccess() throws UnsupportedAudioFileException, IOException {
         // 테스트용 파일 로드
-        File file = new File("test.wav");
+        File file = new File("aduio/test.wav");
         AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(file);
 
         // 모노 리샘플링 후 포맷이 기대한 포맷과 일치하는지 확인
@@ -61,7 +61,7 @@ class AudioResampleTest {
     @DisplayName("모노 리샘플링 개별 실패 테스트")
     void resampleMonoPartFail() throws UnsupportedAudioFileException, IOException {
         // 테스트용 파일 로드
-        File file = new File("test.wav");
+        File file = new File("aduio/test.wav");
         AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(file);
 
         // 모노 리샘플링 후 포맷이 스테레오 포맷과 일치하지 않는지 확인
@@ -73,8 +73,8 @@ class AudioResampleTest {
     @DisplayName("모노 리샘플링 리스트 성공 테스트")
     void resampleMonoSerialSuccess() throws UnsupportedAudioFileException, IOException {
         // 동일한 테스트 파일 두 개로 리스트 생성
-        File file = new File("test.wav");
-        File file2 = new File("test.wav");
+        File file = new File("aduio/test.wav");
+        File file2 = new File("aduio/test.wav");
         List<AudioInputStream> audioInputStream =
                 List.of(AudioSystem.getAudioInputStream(file), AudioSystem.getAudioInputStream(file2));
 
@@ -88,8 +88,8 @@ class AudioResampleTest {
     @DisplayName("모노 리샘플링 리스트 실패 테스트")
     void resampleMonoSerialFail() throws UnsupportedAudioFileException, IOException {
         // 동일한 테스트 파일 두 개로 리스트 생성
-        File file = new File("test.wav");
-        File file2 = new File("test.wav");
+        File file = new File("aduio/test.wav");
+        File file2 = new File("aduio/test.wav");
         List<AudioInputStream> audioInputStream =
                 List.of(AudioSystem.getAudioInputStream(file), AudioSystem.getAudioInputStream(file2));
 
@@ -103,7 +103,7 @@ class AudioResampleTest {
     @DisplayName("스테레오 리샘플링 개별 성공 테스트")
     void resampleStereoPartSuccess() throws UnsupportedAudioFileException, IOException {
         // 테스트용 파일 로드
-        File file = new File("test.wav");
+        File file = new File("aduio/test.wav");
         AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(file);
 
         // 스테레오 리샘플링 후 포맷이 기대한 포맷과 일치하는지 확인
@@ -115,7 +115,7 @@ class AudioResampleTest {
     @DisplayName("스테레오 리샘플링 개별 실패 테스트")
     void resampleStereoPartFail() throws UnsupportedAudioFileException, IOException {
         // 테스트용 파일 로드
-        File file = new File("test.wav");
+        File file = new File("aduio/test.wav");
         AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(file);
 
         // 스테레오 리샘플링 후 포맷이 모노 포맷과 일치하지 않는지 확인
@@ -127,8 +127,8 @@ class AudioResampleTest {
     @DisplayName("스테레오 리샘플링 리스트 성공 테스트")
     void resampleStereoSerialSuccess() throws UnsupportedAudioFileException, IOException {
         // 동일한 테스트 파일 두 개로 리스트 생성
-        File file = new File("test.wav");
-        File file2 = new File("test.wav");
+        File file = new File("aduio/test.wav");
+        File file2 = new File("aduio/test.wav");
         List<AudioInputStream> audioInputStream =
                 List.of(AudioSystem.getAudioInputStream(file), AudioSystem.getAudioInputStream(file2));
 
@@ -142,8 +142,8 @@ class AudioResampleTest {
     @DisplayName("스테레오 리샘플링 리스트 실패 테스트")
     void resampleStereoSerialFail() throws UnsupportedAudioFileException, IOException {
         // 동일한 테스트 파일 두 개로 리스트 생성
-        File file = new File("test.wav");
-        File file2 = new File("test.wav");
+        File file = new File("aduio/test.wav");
+        File file2 = new File("aduio/test.wav");
         List<AudioInputStream> audioInputStream =
                 List.of(AudioSystem.getAudioInputStream(file), AudioSystem.getAudioInputStream(file2));
 

@@ -26,7 +26,7 @@ class AudioInfoTest {
     @DisplayName("mp3 파일 정보 추출 확인 테스트")
     void extractAudioMp3FileInfo() throws IOException {
         // 실제 파일을 사용하여 MockMultipartFile 생성
-        File mp3 = new File("test.mp3");
+        File mp3 = new File("aduio/test.mp3");
 
         // FileInputStream을 통해 파일 데이터를 읽어서 MockMultipartFile 생성
         try (FileInputStream mp3InputStream = new FileInputStream(mp3)) {
@@ -53,7 +53,7 @@ class AudioInfoTest {
     @DisplayName("wav 파일 정보 추출 확인 테스트")
     void extractAudioWavFileInfo() throws IOException {
         // 실제 파일을 사용하여 MockMultipartFile 생성
-        File wav = new File("test.wav");
+        File wav = new File("aduio/test.wav");
 
         // FileInputStream을 통해 파일 데이터를 읽어서 MockMultipartFile 생성
         try (FileInputStream wavInputStream = new FileInputStream(wav)) {

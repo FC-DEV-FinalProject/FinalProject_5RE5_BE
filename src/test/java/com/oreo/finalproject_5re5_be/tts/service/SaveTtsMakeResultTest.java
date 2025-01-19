@@ -50,7 +50,7 @@ public class SaveTtsMakeResultTest {
         String ttsUrl = "//aws/tts/test-audio";
         MockMultipartFile mockFile =
                 new MockMultipartFile(
-                        "test", "test.wav", "audio/wav", new FileInputStream(new File("test.wav")));
+                        "test", "audio/test.wav", "audio/wav", new FileInputStream(new File("audio/test.wav")));
 
         // 2. repository 동작 설정 - ttsSentence 저장할 때 QueryTimeException 발생시키기
         when(ttsAudioFileRepository.save(any(TtsAudioFile.class)))

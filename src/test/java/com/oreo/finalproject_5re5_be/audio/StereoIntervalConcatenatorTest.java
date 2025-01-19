@@ -28,9 +28,9 @@ class StereoIntervalConcatenatorTest {
 
         // 오디오 불러오기
         ByteArrayInputStream byteArrayInputStream =
-                new ByteArrayInputStream(AudioExtensionConverter.mp3ToWav(new File("ttsoutput.mp3")));
+                new ByteArrayInputStream(AudioExtensionConverter.mp3ToWav(new File("aduio/ttsoutput.mp3")));
         ByteArrayInputStream byteArrayInputStream1 =
-                new ByteArrayInputStream(AudioExtensionConverter.mp3ToWav(new File("test.mp3")));
+                new ByteArrayInputStream(AudioExtensionConverter.mp3ToWav(new File("aduio/test.mp3")));
 
         // 오디오 스트림 변환
         AudioInputStream t1 = AudioSystem.getAudioInputStream(byteArrayInputStream);
@@ -61,9 +61,9 @@ class StereoIntervalConcatenatorTest {
 
         // 오디오 불러오기
         ByteArrayInputStream byteArrayInputStream =
-                new ByteArrayInputStream(AudioExtensionConverter.mp3ToWav(new File("ttsoutput.mp3")));
+                new ByteArrayInputStream(AudioExtensionConverter.mp3ToWav(new File("aduio/ttsoutput.mp3")));
         ByteArrayInputStream byteArrayInputStream1 =
-                new ByteArrayInputStream(AudioExtensionConverter.mp3ToWav(new File("test.mp3")));
+                new ByteArrayInputStream(AudioExtensionConverter.mp3ToWav(new File("aduio/test.mp3")));
 
         // 오디오 스트림 변환
         AudioInputStream t1 = AudioSystem.getAudioInputStream(byteArrayInputStream);
@@ -94,9 +94,9 @@ class StereoIntervalConcatenatorTest {
 
         // 오디오 불러오기
         ByteArrayInputStream byteArrayInputStream =
-                new ByteArrayInputStream(AudioExtensionConverter.mp3ToWav(new File("ttsoutput.mp3")));
+                new ByteArrayInputStream(AudioExtensionConverter.mp3ToWav(new File("aduio/ttsoutput.mp3")));
         ByteArrayInputStream byteArrayInputStream1 =
-                new ByteArrayInputStream(AudioExtensionConverter.mp3ToWav(new File("test.mp3")));
+                new ByteArrayInputStream(AudioExtensionConverter.mp3ToWav(new File("aduio/test.mp3")));
 
         // 오디오 스트림 변환
         AudioInputStream t1 = AudioSystem.getAudioInputStream(byteArrayInputStream);
@@ -127,9 +127,9 @@ class StereoIntervalConcatenatorTest {
 
         // 오디오 불러오기
         ByteArrayInputStream byteArrayInputStream =
-                new ByteArrayInputStream(AudioExtensionConverter.mp3ToWav(new File("ttsoutput.mp3")));
+                new ByteArrayInputStream(AudioExtensionConverter.mp3ToWav(new File("aduio/ttsoutput.mp3")));
         ByteArrayInputStream byteArrayInputStream1 =
-                new ByteArrayInputStream(AudioExtensionConverter.mp3ToWav(new File("test.mp3")));
+                new ByteArrayInputStream(AudioExtensionConverter.mp3ToWav(new File("aduio/test.mp3")));
 
         // 오디오 스트림 변환
         AudioInputStream t1 = AudioSystem.getAudioInputStream(byteArrayInputStream);
@@ -159,9 +159,9 @@ class StereoIntervalConcatenatorTest {
 
         // 오디오 불러오기
         ByteArrayInputStream byteArrayInputStream =
-                new ByteArrayInputStream(AudioExtensionConverter.mp3ToWav(new File("ttsoutput.mp3")));
+                new ByteArrayInputStream(AudioExtensionConverter.mp3ToWav(new File("aduio/ttsoutput.mp3")));
         ByteArrayInputStream byteArrayInputStream1 =
-                new ByteArrayInputStream(AudioExtensionConverter.mp3ToWav(new File("test.mp3")));
+                new ByteArrayInputStream(AudioExtensionConverter.mp3ToWav(new File("aduio/test.mp3")));
 
         // 오디오 스트림 변환
         AudioInputStream t1 = AudioSystem.getAudioInputStream(byteArrayInputStream);
@@ -190,9 +190,9 @@ class StereoIntervalConcatenatorTest {
 
         // 오디오 불러오기
         ByteArrayInputStream byteArrayInputStream =
-                new ByteArrayInputStream(AudioExtensionConverter.mp3ToWav(new File("ttsoutput.mp3")));
+                new ByteArrayInputStream(AudioExtensionConverter.mp3ToWav(new File("aduio/ttsoutput.mp3")));
         ByteArrayInputStream byteArrayInputStream1 =
-                new ByteArrayInputStream(AudioExtensionConverter.mp3ToWav(new File("test.mp3")));
+                new ByteArrayInputStream(AudioExtensionConverter.mp3ToWav(new File("aduio/test.mp3")));
 
         // 오디오 스트림 변환
         AudioInputStream t1 = AudioSystem.getAudioInputStream(byteArrayInputStream);
@@ -222,9 +222,9 @@ class StereoIntervalConcatenatorTest {
 
         // 오디오 불러오기
         ByteArrayInputStream byteArrayInputStream =
-                new ByteArrayInputStream(AudioExtensionConverter.mp3ToWav(new File("ttsoutput.mp3")));
+                new ByteArrayInputStream(AudioExtensionConverter.mp3ToWav(new File("aduio/ttsoutput.mp3")));
         ByteArrayInputStream byteArrayInputStream1 =
-                new ByteArrayInputStream(AudioExtensionConverter.mp3ToWav(new File("test.mp3")));
+                new ByteArrayInputStream(AudioExtensionConverter.mp3ToWav(new File("aduio/test.mp3")));
 
         // 오디오 스트림 변환
         AudioInputStream t1 = AudioSystem.getAudioInputStream(byteArrayInputStream);

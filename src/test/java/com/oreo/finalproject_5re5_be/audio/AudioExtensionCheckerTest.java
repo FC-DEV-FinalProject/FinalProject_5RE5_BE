@@ -12,8 +12,8 @@ import org.springframework.test.context.TestPropertySource;
 @SpringBootTest
 @TestPropertySource(locations = "classpath:application-test.properties")
 class AudioExtensionCheckerTest {
-    private File mp3 = new File("test.mp3");
-    private File wav = new File("test.wav");
+    private File mp3 = new File("aduio/test.mp3");
+    private File wav = new File("aduio/test.wav");
 
     @Test
     @DisplayName("wav 확장자 검사 성공 Parameter : File")
