@@ -9,9 +9,8 @@ import com.oreo.finalproject_5re5_be.project.entity.Project;
 import com.oreo.finalproject_5re5_be.tts.entity.*;
 import com.oreo.finalproject_5re5_be.tts.exception.SaveTtsMakeResultException;
 import com.oreo.finalproject_5re5_be.tts.repository.*;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -48,9 +47,9 @@ public class SaveTtsMakeResultTest {
         Voice voice = createVoice(voiceSeq, language);
         TtsSentence ttsSentence = createTtsSentence(tsSeq, voice, project);
         String ttsUrl = "//aws/tts/test-audio";
+        InputStream inputStream = getClass().getClassLoader().getResourceAsStream("audio/test.wav");
         MockMultipartFile mockFile =
-                new MockMultipartFile(
-                        "test", "audio/test.wav", "audio/wav", new FileInputStream(new File("audio/test.wav")));
+                new MockMultipartFile("test", "/audio/test.wav", "audio/wav", inputStream);
 
         // 2. repository 동작 설정 - ttsSentence 저장할 때 QueryTimeException 발생시키기
         when(ttsAudioFileRepository.save(any(TtsAudioFile.class)))
