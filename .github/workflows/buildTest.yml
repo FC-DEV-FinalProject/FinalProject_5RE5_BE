@@ -55,6 +55,13 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
+      # 3-1. 소나큐브 패키지 캐싱 설정
+      - name: Cache SonarQube packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.sonar/cache
+          key: ${{ runner.os }}-sonar
+          restore-keys: ${{ runner.os }}-sonar
 
       # Gradle 의존성 캐시 설정
       - name: Cache Gradle dependencies
@@ -81,9 +88,12 @@ jobs:
           echo $TTS_JSON_CONTENT
           
 
-      # 빌드 및 테스트 실행
-      - name: Build and Test
-        run: ./gradlew build
+      # 빌드 및 테스트 실행+소나큐브
+      - name: Build and Test and analyze
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+        run: ./gradlew build sonar --info
 
         # Gradle Test를 실행한다
       - name: Test with Gradle
