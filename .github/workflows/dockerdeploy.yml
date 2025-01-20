@@ -89,7 +89,7 @@ jobs:
             sudo docker pull ${{ secrets.DOCKER_ID }}/${{ secrets.DOCKER_IMAGE }}:1.0
             
             # 스크립트 실행할 곳으로 이동
-            cd /home/5re5park
+            cd ${{ secrets.SSH_PWD }}
             
             echo "docker_deploy.sh를 실행합니다."
             chmod +x ./docker_deploy.sh
