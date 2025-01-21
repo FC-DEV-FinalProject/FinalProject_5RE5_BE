@@ -80,20 +80,22 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x ./gradlew
         shell: bash
+
+      # Json 파일 업로드
       - name: Create JSON Config File
         env:
           TTS_JSON_CONTENT: ${{ secrets.TTS_JSON_CONTENT }}
         run: |
           echo "${TTS_JSON_CONTENT}" > src/main/resources/tts.json
           echo $TTS_JSON_CONTENT
-          
 
-      # 빌드 및 테스트 실행+소나큐브
-      - name: Build and Test and analyze
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-        run: ./gradlew build sonar --info
+      # build and Test
+      - name: Build and Test
+        run: ./gradlew build
+
+      # 소나큐브 실행
+      - name: Sonarqube Scan
+        run: ./gradlew sonar -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }} -Dsonar.token=${{ secrets.SONAR_TOKEN }}
 
         # Gradle Test를 실행한다
       - name: Test with Gradle
