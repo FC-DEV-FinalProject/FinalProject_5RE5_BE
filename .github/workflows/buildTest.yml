@@ -1,4 +1,4 @@
-name: CI & Deploy Pipeline
+name: PR CI and  develop push CI
 
 # 1. 이벤트 설정
 on:
@@ -19,7 +19,7 @@ on:
 
 # 2. 빌드 및 테스트 잡
 jobs:
-  build-and-test:
+  CI-start:
     runs-on: ubuntu-latest
     env:
       EMAIL_USERNAME: ${{ secrets.EMAIL_USERNAME }}
@@ -37,6 +37,7 @@ jobs:
       AWS_SQS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SQS_SECRET_ACCESS_KEY }}
       AWS_SQS_QUEUE_URL: ${{ secrets.AWS_SQS_QUEUE_URL }}
       AWS_SQS_VIRTUAL_QUEUE_NAME: ${{ secrets.AWS_SQS_VIRTUAL_QUEUE_NAME }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     permissions:
       pull-requests: write  # PR에 댓글, 체크 실행을 할 수 있는 권한
       checks: write          # 체크 결과를 기록할 권한
@@ -44,6 +45,11 @@ jobs:
 
 
     steps:
+      # Node.js 설치
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
       # 코드 체크아웃
       - name: Check out code
         uses: actions/checkout@v4
@@ -55,23 +61,6 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      # 3-1. 소나큐브 패키지 캐싱 설정
-      - name: Cache SonarQube packages
-        uses: actions/cache@v4
-        with:
-          path: ~/.sonar/cache
-          key: ${{ runner.os }}-sonar
-          restore-keys: ${{ runner.os }}-sonar
-
-      # Gradle 의존성 캐시 설정
-      - name: Cache Gradle dependencies
-        uses: actions/cache@v4
-        with:
-          path: ~/.gradle/caches
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-
-
       # Gradle Wrapper 권한 부여
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
@@ -80,14 +69,26 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x ./gradlew
         shell: bash
-
+        # Gradle 의존성 캐시 설정
+      - name: Cache Gradle dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
       # Json 파일 업로드
       - name: Create JSON Config File
         env:
           TTS_JSON_CONTENT: ${{ secrets.TTS_JSON_CONTENT }}
         run: |
-          echo "${TTS_JSON_CONTENT}" > src/main/resources/tts.json
+          echo "${TTS_JSON_CONTENT}" | base64 -d  > src/main/resources/tts.json
           echo $TTS_JSON_CONTENT
+
+      - name: Set Cache Directory Permissions
+        run: |
+          if [ -d "~/.sonar/cache" ]; then chmod -R 777 ~/.sonar/cache; fi
+          if [ -d "~/.gradle/caches" ]; then chmod -R 777 ~/.gradle/caches; fi
 
       # build and Test
       - name: Build and Test
@@ -96,6 +97,14 @@ jobs:
       # 소나큐브 실행
       - name: Sonarqube Scan
         run: ./gradlew sonar -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }} -Dsonar.token=${{ secrets.SONAR_TOKEN }}
+
+      # 3-1. 소나큐브 패키지 캐싱 설정
+      - name: Cache SonarQube packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.sonar/cache
+          key: ${{ runner.os }}-sonar
+          restore-keys: ${{ runner.os }}-sonar
 
         # Gradle Test를 실행한다
       - name: Test with Gradle
