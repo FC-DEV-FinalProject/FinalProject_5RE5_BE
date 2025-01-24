@@ -1,13 +1,13 @@
 package com.oreo.finalproject_5re5_be.vc.exception;
 
-import com.oreo.finalproject_5re5_be.global.exception.BusinessException;
 import com.oreo.finalproject_5re5_be.global.exception.ErrorCode;
 
-public class VcNotMemberException extends BusinessException {
+public class VcNotMemberException extends VcNotFoundException {
     public VcNotMemberException() {
-        super(ErrorCode.HANDLE_ACCESS_DENIED.getMessage(), ErrorCode.HANDLE_ACCESS_DENIED);
+        super(ErrorCode.VC_NOT_FOUND_MEMBER_ERROR.getMessage(), ErrorCode.VC_NOT_FOUND_MEMBER_ERROR);
     }
+
     public VcNotMemberException(String message) {
-        super(message, ErrorCode.HANDLE_ACCESS_DENIED);
+        super(message, ErrorCode.VC_NOT_FOUND_MEMBER_ERROR);
     }
 }

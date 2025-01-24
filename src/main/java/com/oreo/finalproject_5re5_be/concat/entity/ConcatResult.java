@@ -2,10 +2,9 @@ package com.oreo.finalproject_5re5_be.concat.entity;
 
 import com.oreo.finalproject_5re5_be.global.entity.BaseEntity;
 import jakarta.persistence.*;
-import lombok.*;
-
 import java.util.ArrayList;
 import java.util.List;
+import lombok.*;
 
 @ToString
 @Getter
@@ -24,6 +23,7 @@ public class ConcatResult extends BaseEntity {
     @JoinColumn(name = "pro_seq")
     private ConcatTab concatTab;
 
+    @ToString.Exclude
     @OneToMany(mappedBy = "concatResult", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<BgmFile> bgmFiles = new ArrayList<>();
 
@@ -42,4 +42,23 @@ public class ConcatResult extends BaseEntity {
     @Column(name = "file_size")
     private Long fileSize;
 
+    @Column(name = "process_id")
+    private String processId;
+
+    @Column private Integer seperated;
+
+    public void addBgmFile(BgmFile bgmFile) {
+        this.bgmFiles.add(
+                BgmFile.builder()
+                        .concatResult(this)
+                        .audioUrl(bgmFile.getAudioUrl())
+                        .fileName(bgmFile.getFileName())
+                        .fileLength(bgmFile.getFileLength())
+                        .extension(bgmFile.getExtension())
+                        .build());
+    }
+
+    public void addBgmFiles(List<BgmFile> bgmFiles) {
+        bgmFiles.forEach(this::addBgmFile);
+    }
 }
