@@ -29,13 +29,39 @@ public enum ErrorCode {
     CODE_DUPLICATED_ERROR(409, "이미 사용중인 코드명입니다. 다른 코드명을 사용해 주세요."),
     CODE_INVALID_INPUT_VALUE_ERROR(400, "코드 입력값이 올바르지 않습니다."),
 
-
-
     INVALID_INPUT_VALUE(400, " Invalid Input Value"),
     ENTITY_NOT_FOUND(400, " Entity Not Found"),
     INTERNAL_SERVER_ERROR(500, "Server Error"),
     INVALID_TYPE_VALUE(400, " Invalid Type Value"),
-    HANDLE_ACCESS_DENIED(403, "Access is Denied");
+    HANDLE_ACCESS_DENIED(403, "Access is Denied"),
+
+    // 프로젝트 ERROR 처리
+    PROJECT_NOT_FOUND_ERROR(404, "해당 프로젝트를 찾을 수 없습니다."),
+    PROJECT_INVALID_NAME(400, "헤당 프로젝트 이름이 허용되지 않습니다."),
+    PROJECT_ACCESS_DENIED(403, "해당 프로젝트는 회원의 프로젝트가 아닙니다."),
+
+    // TTS ERROR 처리
+    PROJECT_MISMATCH_ERROR(400, "요청하신 프로젝트를 소유하고 있지 않습니다."),
+    VOICE_ENTITY_NOT_FOUND_ERROR(404, "해당 음성을 찾을 수 없습니다."),
+    TTS_SENTENCE_NOT_FOUND_ERROR(404, "해당 문장을 찾을 수 없습니다."),
+
+    // TTS 생성 ERROR 처리
+    TTS_MAKE_FAILED_ERROR(500, "TTS 생성에 실패했습니다."),
+    TTS_MAKE_INVALID_INPUT_VALUE_ERROR(400, "TTS 생성 입력값이 올바르지 않습니다."),
+    TTS_MAKE_INVALID_SPEED(400, "허용되지 않는 TTS 속도입니다."),
+    TTS_MAKE_INVALID_PITCH(400, "허용되지 않는 TTS 음높이입니다."),
+
+    TTS_MAKE_INVALID_VOLUME(400, "허용되지 않는 TTS 음량입니다."),
+
+    // VC ERROR 처리
+    VC_ACCESS_DENIED(403, "회원에게 권한이 없습니다."),
+    VC_NOT_FOUND_MEMBER_ERROR(403, "VC 해당 정보가 회원에게 없습니다."),
+    VC_NOT_FOUND_ERROR(404, "해당 정보를 찾을수 없습니다."),
+    VC_NOT_FOUND_PROJECT_ERROR(404, "해당 프로젝트를 찾을수 없습니다."),
+    VC_NOT_FOUND_SRC_ERROR(404, "해당 SRC를 찾을 수 없습니다."),
+    VC_NOT_FOUND_TRG_ERROR(404, "해당 TRG를 찾을 수 없습니다."),
+    VC_NOT_FOUND_TEXT_ERROR(404, "해당 Text를 찾을 수 없습니다."),
+    VC_NOT_FOUND_RESULT_ERROR(404, "해당 결과물을 찾을 수 없습니다.");
 
     private final String message;
     private final int status;

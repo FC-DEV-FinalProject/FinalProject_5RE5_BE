@@ -1,4 +1,4 @@
-name: CD
+name: MAIN CI&CD
 
 # 1. 이벤트 설정
 on:
@@ -26,18 +26,32 @@ jobs:
       AWS_SQS_QUEUE_URL: ${{ secrets.AWS_SQS_QUEUE_URL }}
       AWS_SQS_VIRTUAL_QUEUE_NAME: ${{ secrets.AWS_SQS_VIRTUAL_QUEUE_NAME }}
 
-    steps: # 1. 코드 체크아웃
+    steps:
+
+    - name: Install Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+
     - name: Check out code
       uses: actions/checkout@v4
 
-    # 2. JDK 17 설치
+    # JDK 17 설치
     - name: Set up JDK 17
       uses: actions/setup-java@v4
       with:
         java-version: '17'
         distribution: 'temurin'
 
-    # 3. Gradle 의존성 캐시 설정
+    # Gradle Wrapper 권한 부여
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
+
+    # gradlew 파일 실행권한 설정
+    - name: Grant execute permission for gradlew
+      run: chmod +x ./gradlew
+      shell: bash
+      # Gradle 의존성 캐시 설정
     - name: Cache Gradle dependencies
       uses: actions/cache@v4
       with:
@@ -46,32 +60,49 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-gradle-
 
-    # 4. Gradle Wrapper 권한 부여
-    - name: Grant execute permission for gradlew
-      run: chmod +x ./gradlew
-
-      # 5. JSON Config 파일 생성
+    # Json 파일 업로드
     - name: Create JSON Config File
       env:
-        TTS_JSON_CONTENT: ${{ secrets.TTS_JSON }}
+        TTS_JSON_CONTENT: ${{ secrets.TTS_JSON_CONTENT }}
       run: |
-        echo "${TTS_JSON_CONTENT}" > src/main/resources/tts.json
+        echo "${TTS_JSON_CONTENT}" | base64 -d  > src/main/resources/tts.json
+        echo $TTS_JSON_CONTENT
 
-      # 6. 빌드 및 테스트 실행
+    - name: Set Cache Directory Permissions
+      run: |
+        if [ -d "~/.sonar/cache" ]; then chmod -R 777 ~/.sonar/cache; fi
+        if [ -d "~/.gradle/caches" ]; then chmod -R 777 ~/.gradle/caches; fi
+
+      #build and Test
     - name: Build and Test
-      run: ./gradlew build -x test
+      run: ./gradlew build
 
+      # 소나큐브 실행
+    - name: Sonarqube Scan
+      run: ./gradlew sonar -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }} -Dsonar.token=${{ secrets.SONAR_TOKEN }}
+
+    # 소나큐브 패키지 캐싱 설정
+    - name: Cache SonarQube packages
+      uses: actions/cache@v4
+      with:
+        path: ~/.sonar/cache
+        key: ${{ runner.os }}-sonar
+        restore-keys: ${{ runner.os }}-sonar
+
+    # 도커 로그인
     - name: Docker Login
       uses: docker/login-action@v3
       with:
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
-    # push 까지만 하고 CD는 그냥 스크립트 실행해서 docker pull or run으로 파일을 받아서 실행할까? 무중단 배포는 그렇게 해야할듯?
+
+    #  도커 이미지 생성 및 푸쉬
     - name: Build and Push Docker Image
       run: |
         docker build -t ${{ secrets.DOCKER_ID }}/${{ secrets.DOCKER_IMAGE }}:1.0 .
         docker push ${{ secrets.DOCKER_ID }}/${{ secrets.DOCKER_IMAGE }}:1.0
 
+# 서버 배포
   CD:
     needs: CI
     runs-on: ubuntu-latest
@@ -89,7 +120,7 @@ jobs:
             sudo docker pull ${{ secrets.DOCKER_ID }}/${{ secrets.DOCKER_IMAGE }}:1.0
             
             # 스크립트 실행할 곳으로 이동
-            cd /home/ubuntu/app
+            cd ${{ secrets.SSH_PWD }}
             
             echo "docker_deploy.sh를 실행합니다."
             chmod +x ./docker_deploy.sh

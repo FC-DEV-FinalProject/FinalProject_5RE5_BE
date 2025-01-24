@@ -1,7 +1,9 @@
 plugins {
     id 'java'
-    id 'org.springframework.boot' version '3.3.5'
+    id 'org.springframework.boot' version '3.3.6'
     id 'io.spring.dependency-management' version '1.1.6'
+    id 'com.diffplug.spotless' version '6.25.0'
+    id "org.sonarqube" version "6.0.1.5171"
 }
 
 group = 'com.oreo'
@@ -19,11 +21,19 @@ configurations {
     }
 }
 
+sonar {
+    properties {
+        property "sonar.projectKey", "5re5park"
+        property "sonar.projectName", "5re5park"
+    }
+}
+
 repositories {
     mavenCentral()
 }
 
 dependencies {
+    implementation 'org.springframework:spring-context:6.1.15'
     implementation 'org.springframework.boot:spring-boot-starter-web'
 
     // DEVELOP
@@ -73,6 +83,8 @@ dependencies {
 
     // MONITORING
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    // Prometheus
+    implementation 'io.micrometer:micrometer-registry-prometheus'
 
     // LOGGER
     // https://mvnrepository.com/artifact/ch.qos.logback/logback-classic
@@ -92,24 +104,53 @@ dependencies {
     implementation platform('com.amazonaws:aws-java-sdk-bom:1.12.529')
     implementation 'com.amazonaws:aws-java-sdk-s3'
 
-    // https://mvnrepository.com/artifact/software.amazon.awssdk/sqs
-    implementation group: 'software.amazon.awssdk', name: 'sqs', version: '2.21.46'
+//    // https://mvnrepository.com/artifact/software.amazon.awssdk/sqs
+//    implementation group: 'software.amazon.awssdk', name: 'sqs', version: '2.21.46'
 
     // https://mvnrepository.com/artifact/software.amazon.awssdk/auth
     implementation group: 'software.amazon.awssdk', name: 'auth', version: '2.21.46'
 
-    // https://mvnrepository.com/artifact/com.amazonaws/amazon-sqs-java-temporary-queues-client
-    implementation group: 'com.amazonaws', name: 'amazon-sqs-java-temporary-queues-client', version: '2.0.1'
+//    // https://mvnrepository.com/artifact/com.amazonaws/amazon-sqs-java-temporary-queues-client
+//    implementation group: 'com.amazonaws', name: 'amazon-sqs-java-temporary-queues-client', version: '2.0.1'
 
 
     //http request
     // https://mvnrepository.com/artifact/org.apache.httpcomponents.client5/httpclient5
     implementation 'org.apache.httpcomponents.client5:httpclient5:5.4.1'
     implementation 'org.apache.httpcomponents:httpmime:4.5.13'
+
+
 }
 
 test {
     useJUnitPlatform()
 }
 
+spotless {
+    java {
+        // import 순서 정의
+        importOrder(
+                "java",
+                "javax",
+                "lombok",
+                "org.springframework",
+                "",
+                "\\#",
+                "org.junit",
+                "\\#org.junit",
+                "com.guide",
+                "\\#com.guide"
+        )
+        // 사용하지 않는 import 제거
+        removeUnusedImports()
+        // 구글 자바 포맷 적용
+        googleJavaFormat()
 
+        indentWithTabs(2)
+        indentWithSpaces(4)
+        // 공백 제거
+        trimTrailingWhitespace()
+        // 끝부분 New Line 처리
+        endWithNewline()
+    }
+}

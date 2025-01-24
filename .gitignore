@@ -1,6 +1,8 @@
 # Created by https://www.toptal.com/developers/gitignore/api/intellij,gradle,java,linux,git,macos,windows
 # Edit at https://www.toptal.com/developers/gitignore?templates=intellij,gradle,java,linux,git,macos,windows
 
+# github actions 시크릿변수 파일
+5re5.secrets
 
 ### dotenv ###
 .env

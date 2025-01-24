@@ -8,13 +8,6 @@ import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import com.oreo.finalproject_5re5_be.global.component.audio.AudioExtensionConverter;
 import com.oreo.finalproject_5re5_be.vc.dto.request.VcUrlRequest;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-import org.springframework.web.multipart.MultipartFile;
-
-import javax.sound.sampled.*;
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -22,6 +15,12 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import javax.sound.sampled.*;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
 
 @Component
 @Slf4j
@@ -35,7 +34,6 @@ public class S3Service {
 
     @Value("${aws.s3.bucket}")
     private String buketName;
-
 
     public String upload(MultipartFile file, String dirName) {
         return uploadSingleFile(file, dirName);
@@ -69,7 +67,6 @@ public class S3Service {
         }
         return files;
     }
-
 
     public List<String> upload(List<MultipartFile> files, String dirName) {
         if (files.isEmpty()) {
@@ -119,19 +116,14 @@ public class S3Service {
     }
 
     // PutObjectRequest 생성
-    private PutObjectRequest createPutObjectRequest(MultipartFile file, String key, ObjectMetadata objectMetadata) {
+    private PutObjectRequest createPutObjectRequest(
+            MultipartFile file, String key, ObjectMetadata objectMetadata) {
         try {
-            return new PutObjectRequest(
-                    buketName,
-                    key,
-                    file.getInputStream(),
-                    objectMetadata
-            );
+            return new PutObjectRequest(buketName, key, file.getInputStream(), objectMetadata);
         } catch (IOException e) {
             throw new IllegalArgumentException("입력 파라미터에 문제가 있습니다. 파일 업로드 불가!", e);
         }
     }
-
 
     /**
      * S3에서 파일을 다운로드하고 로컬에 저장
@@ -176,10 +168,8 @@ public class S3Service {
         return "vc/src/" + url.substring(url.lastIndexOf("/") + 1);
     }
 
-
     /**
-     * File folder = new File("경로")
-     * 파일 삭제
+     * File folder = new File("경로") 파일 삭제
      *
      * @param folder
      */
@@ -195,23 +185,26 @@ public class S3Service {
                     } else {
                         // 파일 삭제
                         if (!file.delete()) {
-                            log.error("파일 삭제 실패: {}" ,file.getAbsolutePath());
+                            log.error("파일 삭제 실패: {}", file.getAbsolutePath());
                         }
                     }
                 }
             }
             // 폴더 삭제
             if (!folder.delete()) {
-                log.error("폴더 삭제 실패: {}" , folder.getAbsolutePath());
+                log.error("폴더 삭제 실패: {}", folder.getAbsolutePath());
             }
         } else {
             log.error("폴더가 존재하지 않음: {} ", folder.getAbsolutePath());
         }
     }
 
-
-    public String upload(InputStream audioInputStream, String dirName, String fileName
-            , long fileSize, String contentType) {
+    public String upload(
+            InputStream audioInputStream,
+            String dirName,
+            String fileName,
+            long fileSize,
+            String contentType) {
         if (audioInputStream == null) {
             throw new IllegalArgumentException("AudioInputStream이 null입니다.");
         }
@@ -230,12 +223,12 @@ public class S3Service {
 
         // S3에 업로드 요청
         try (InputStream inputStream = audioInputStream) {
-            PutObjectRequest request = new PutObjectRequest(
-                    buketName, // S3 버킷 이름
-                    key,       // 저장 경로(key)
-                    inputStream,
-                    objectMetadata
-            );
+            PutObjectRequest request =
+                    new PutObjectRequest(
+                            buketName, // S3 버킷 이름
+                            key, // 저장 경로(key)
+                            inputStream,
+                            objectMetadata);
 
             // S3 버킷에 객체 업로드
             s3Client.putObject(request);
@@ -247,19 +240,27 @@ public class S3Service {
         return s3Client.getUrl(buketName, key).toString();
     }
 
-
     public static AudioInputStream load(String s3Url) {
         try {
             URL url = new URL(s3Url);
             AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(url);
+            log.info("[load] S3 저장소에서 URL audioInputStream 가져오기: {}", s3Url);
+
+            // 원본 포맷 로그
+            log.info("[load] MP3 to WAV 하기 전, 오리지널 포맷: {}", audioInputStream.getFormat());
+
             byte[] bytes = AudioExtensionConverter.mp3ToWav(audioInputStream);
+            log.info("[load] S3에서 꺼낸 URL MP3를 WAV로 변환. bytes.length: {} bytes", bytes.length);
 
             return AudioSystem.getAudioInputStream(new ByteArrayInputStream(bytes));
         } catch (MalformedURLException e) {
+            log.error("Invalid S3 URL: {}", s3Url, e);
             throw new IllegalArgumentException("잘못된 URL입니다");
         } catch (IOException e) {
+            log.error("Error reading audio file from S3 URL: {}", s3Url, e);
             throw new IllegalArgumentException("오디오 파일이 아닙니다.");
         } catch (UnsupportedAudioFileException e) {
+            log.error("Unsupported audio format at S3 URL: {}", s3Url, e);
             throw new IllegalArgumentException("지원하지 않는 오디오 형식입니다");
         }
     }
@@ -269,12 +270,12 @@ public class S3Service {
         try {
             s3Client.deleteObject(buketName, key);
         } catch (SdkClientException e) {
-            throw new RuntimeException("S3 파일 삭제 요청 중 에러 발생, buketName:"+buketName+", key:"+key);
+            throw new RuntimeException("S3 파일 삭제 요청 중 에러 발생, buketName:" + buketName + ", key:" + key);
         }
-
     }
 
-    public String uploadAudioStream(AudioInputStream audioStream, String dirName, String fileName) throws IOException {
+    public String uploadAudioStream(AudioInputStream audioStream, String dirName, String fileName)
+            throws IOException {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
         // AudioInputStream -> ByteArrayOutputStream 변환
@@ -291,36 +292,5 @@ public class S3Service {
         s3Client.putObject(buketName, key, inputStream, metadata);
 
         return s3Client.getUrl(buketName, key).toString();
-    }
-
-    /**
-     * S3에서 URL을 통해 AudioInputStream으로 읽기 (Buffered Stream)
-     *
-     * @param s3Url S3의 파일 URL
-     * @return AudioInputStream
-     * @throws IOException
-     */
-    public AudioInputStream loadAsBufferedStream(String s3Url) throws IOException {
-        try {
-            URL url = new URL(s3Url);
-            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(url);
-
-            // 데이터를 메모리에 버퍼링
-            ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-            AudioSystem.write(audioInputStream, AudioFileFormat.Type.WAVE, buffer);
-
-            byte[] bufferedData = buffer.toByteArray();
-            AudioFormat format = audioInputStream.getFormat();
-
-            return new AudioInputStream(
-                    new ByteArrayInputStream(bufferedData),
-                    format,
-                    bufferedData.length / format.getFrameSize()
-            );
-        } catch (MalformedURLException e) {
-            throw new IllegalArgumentException("잘못된 S3 URL입니다.", e);
-        } catch (UnsupportedAudioFileException e) {
-            throw new IllegalArgumentException("지원되지 않는 오디오 파일 형식입니다.", e);
-        }
     }
 }
